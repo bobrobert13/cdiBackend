@@ -11,7 +11,6 @@ const types = `
     status: String
     message: String
     token: Token
-    user: User
   }
 
   type Account {
