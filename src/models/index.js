@@ -13,7 +13,7 @@ const CDI = require('./cdi')(sequelize);
 const Correo = require('./correo')(sequelize);
 const Diagnostico = require('./diagnostico')(sequelize);
 const Direccion = require('./direccion')(sequelize);
-const Especialidad = require('./especialidad')(sequelize);
+// const Especialidad = require('./especialidad')(sequelize);
 const Estado = require('./estado')(sequelize);
 const Examenes = require('./examenes')(sequelize);
 const ImagenesMedicas = require('./imagenes_medicas')(sequelize);
@@ -339,10 +339,8 @@ module.exports = {
     HistorialMedico,
     Hospitalizacion,
     Emergencia,
-
     Diagnostico,
     Tratamiento,
-    // Especialidad,
     Estado,
     Examenes,
     ImagenesMedicas,
