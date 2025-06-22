@@ -20,6 +20,11 @@ const Usuario = sequelize.define('Usuario', {
     unique: true
   },
 
+  contrasena: {
+    type: DataTypes.STRING(300),
+    allowNull: false
+  },
+
   fecha_creacion: {
     type: DataTypes.DATE,
     allowNull: false,

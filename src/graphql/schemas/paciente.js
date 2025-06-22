@@ -10,6 +10,7 @@ export const paciente = `
   antecedentes_familiares: String
   tipo_de_sangre: String
   alergias: String
+  persona: Persona!
 `;
 
 const types = `
@@ -26,6 +27,7 @@ const types = `
     antecedentes_familiares: String
     tipo_de_sangre: String
     alergias: String
+    personaInput: CrearPersonaInput!
   }
 
   input ActualizarPacienteInput {
@@ -37,6 +39,7 @@ const types = `
     antecedentes_familiares: String
     tipo_de_sangre: String
     alergias: String
+    personaInput: ActualizarPersonaInput      
   }
 `;
 
@@ -49,6 +52,7 @@ const mutations = `
   crearPaciente(input: CrearPacienteInput!): Paciente!
   actualizarPaciente(id_paciente: ID!, input: ActualizarPacienteInput!): Paciente!
   eliminarPaciente(id_paciente: ID!): Boolean!
+  Paciente: Paciente
 `;
 
 export { types, queries, mutations };

@@ -46,6 +46,42 @@ type Telefono {
     ${persona}
   }
 
+  input CrearTelefonoInput {
+  codigo: String!
+  numero: String!
+}
+
+input CrearCorreoInput {
+  correo: String!
+}
+
+input CrearDireccionInput {
+  parroquia: String!
+  codigo_postal: String
+  numero_casa: String
+  calle: String!
+  punto_referencia: String
+  sector: String
+}
+
+input ActualizarTelefonoInput {
+  codigo: String
+  numero: String
+}
+
+input ActualizarCorreoInput {
+  correo: String
+}
+
+input ActualizarDireccionInput {
+  parroquia: String
+  codigo_postal: String
+  numero_casa: String
+  calle: String
+  punto_referencia: String
+  sector: String
+}
+
   input CrearPersonaInput {
     nombre1: String!
     nombre2: String
@@ -56,10 +92,13 @@ type Telefono {
     estado_civil: String
     ocupacion: String
     cedula_identidad: String!
-    fk_cdi_id: Int
-    fk_direccion_id: Int
-    fk_telefono_id: Int
-    fk_correo_id: Int
+  fk_cdi_id: Int  
+  fk_direccion_id: Int
+  fk_telefono_id: Int
+  fk_correo_id: Int
+  telefonoInput: CrearTelefonoInput
+  correoInput: CrearCorreoInput
+  direccionInput: CrearDireccionInput
   }
 
   input ActualizarPersonaInput {

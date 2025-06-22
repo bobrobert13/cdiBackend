@@ -55,6 +55,7 @@ Persona.belongsTo(CDI, {
 
 CDI.hasMany(Persona, {
     foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
     as: 'personas'
 });
 
@@ -66,6 +67,7 @@ Usuario.belongsTo(Role, {
 
 Role.hasMany(Usuario, {
     foreignKey: 'fk_role_id',
+    onDelete: 'CASCADE',
     as: 'usuarios',
 });
 
@@ -78,6 +80,7 @@ Usuario.belongsTo(Doctor, {
 
 Doctor.hasMany(Usuario, {
     foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
     as: 'usuarios'
 });
 
@@ -89,6 +92,7 @@ Usuario.belongsTo(Seguridad, {
 
 Seguridad.hasMany(Usuario, {
     foreignKey: 'fk_seguridad_id',
+    onDelete: 'CASCADE',
     as: 'usuarios'
 });
 
@@ -101,6 +105,7 @@ Usuario.belongsTo(CDI, {
 
 CDI.hasMany(Usuario, {
     foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
     as: 'usuarios'
 });
 
@@ -112,6 +117,7 @@ Persona.belongsTo(Direccion, {
 
 Direccion.hasMany(Persona, {
     foreignKey: 'fk_direccion_id',
+    onDelete: 'CASCADE',
     as: 'personas'
 });
 
@@ -123,6 +129,7 @@ Persona.belongsTo(Telefono, {
 
 Telefono.hasMany(Persona, {
     foreignKey: 'fk_telefono_id',
+    onDelete: 'CASCADE',
     as: 'personas'
 });
 
@@ -134,18 +141,21 @@ Persona.belongsTo(Correo, {
 
 Correo.hasMany(Persona, {
     foreignKey: 'fk_correo_id',
+    onDelete: 'CASCADE',
     as: 'personas'
 });
 
 // doctor registra consultas de pacientes
 Doctor.hasMany(Consulta, {
     foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
     as: 'consultas'
 });
 
 // paciente tiene registros de consultas
 Paciente.hasMany(Consulta, {
     foreignKey: 'fk_paciente_id',
+    onDelete: 'CASCADE',
     as: 'consultas'
 });
 
@@ -183,6 +193,7 @@ Emergencia.hasOne(HistorialMedico, {
 //  doctor puede registrar una hospitalizacion
 Doctor.hasMany(Hospitalizacion, {
     foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
     as: 'hospitalizaciones'
 });
 
@@ -201,12 +212,14 @@ Hospitalizacion.belongsTo(Doctor, {
 // doctor puede registrar un diagnostico del paciente
 Doctor.hasMany(Diagnostico, {
     foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
     as: 'diagnosticos'
 });
 
 // paciente tiene un diagnostico
 Paciente.hasMany(Diagnostico, {
     foreignKey: 'fk_paciente_id',
+    onDelete: 'CASCADE',
     as: 'diagnosticos'
 });
 
@@ -225,12 +238,14 @@ Diagnostico.belongsTo(Doctor, {
 // doctor puede registrar un examen del paciente
 Doctor.hasMany(Examenes, {
     foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
     as: 'examenes'
 });
 
 // paciente tiene un examen
 Paciente.hasMany(Examenes, {
     foreignKey: 'fk_paciente_id',
+    onDelete: 'CASCADE',
     as: 'examenes'
 });
 
@@ -249,12 +264,14 @@ Examenes.belongsTo(Doctor, {
 // doctor puede registrar un medicamento del paciente
 Doctor.hasMany(Medicamento, {
     foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
     as: 'medicamentos'
 });
 
 // paciente tiene un medicamento
 Paciente.hasMany(Medicamento, {
     foreignKey: 'fk_paciente_id',
+    onDelete: 'CASCADE',
     as: 'medicamentos'
 });
 
@@ -273,12 +290,14 @@ Medicamento.belongsTo(Doctor, {
 // doctor puede registrar un tratamiento del paciente
 Doctor.hasMany(Tratamiento, {
     foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
     as: 'tratamientos'
 });
 
 // paciente tiene un tratamiento
 Paciente.hasMany(Tratamiento, {
     foreignKey: 'fk_paciente_id',
+    onDelete: 'CASCADE',
     as: 'tratamientos'
 });
 
@@ -297,12 +316,14 @@ Tratamiento.belongsTo(Doctor, {
 // doctor puede registrar una imagen medica del paciente
 Doctor.hasMany(ImagenesMedicas, {
     foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
     as: 'imagenes_medicas'
 });
 
 // paciente tiene una imagen medica
 Paciente.hasMany(ImagenesMedicas, {
     foreignKey: 'fk_paciente_id',
+    onDelete: 'CASCADE',
     as: 'imagenes_medicas'
 });
 

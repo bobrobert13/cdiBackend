@@ -1,4 +1,83 @@
 const {sequelize} = require('../models/index.js');
+const {Usuario, CDI, Persona, Doctor
+ } = require('../models/index.js');
+
+
+async function crearUsuariosDePrueba({ Usuario, CDI, Persona }) {
+  // Primero, crea un CDI de prueba (si no existe)
+  const cdi = await CDI.create({
+    numero_cdi: "CDI-001",
+    nombre: "CDI Central",
+    encargado: "Dr. Encargado",
+    cuadrante: "A1"
+  });
+
+  // Crea personas de prueba (si quieres asociar usuarios con personas)
+  const personaAdmin = await Persona.create({
+    nombre1: "Ana",
+    apellido1: "Pérez",
+    sexo: "F",
+    cedula_identidad: "V12345678",
+    fk_cdi_id: cdi.id_cdi
+  });
+
+  const personaDoctor = await Persona.create({
+    nombre1: "Carlos",
+    apellido1: "Gómez",
+    sexo: "M",
+    cedula_identidad: "V87654321",
+    fk_cdi_id: cdi.id_cdi
+  });
+
+  // Crea usuarios de prueba con diferentes roles
+  const doctor = await Doctor.create({
+    anos_experiencia: 5,
+    numero_carnet: "DOC-001",
+    area_de_trabajo: "Pediatría",
+    horario: "Lunes a Viernes 8:00-16:00",
+    fk_persona_id: personaDoctor.id_persona
+  });
+
+  await Usuario.create({
+    rol: "doctor",
+    nombre_usuario: "doctor1",
+    estado: "activo",
+    fk_cdi_id: cdi.id_cdi,
+    fk_doctor_id: doctor.id_doctor,
+    contrasena: "123456"
+    // contrasena: await hashcontrasena("doctor123"),
+  });
+
+  await Usuario.create({
+    rol: "admin",
+    nombre_usuario: "admin1",
+    estado: "activo",
+    fk_cdi_id: cdi.id_cdi,
+    fk_doctor_id: doctor.id_doctor,
+    contrasena: "123456"
+
+  });
+
+  await Usuario.create({
+    rol: "doctor",
+    nombre_usuario: "doctor1",
+    estado: "activo",
+    fk_cdi_id: cdi.id_cdi,
+    contrasena: "123456",
+
+  });
+
+  await Usuario.create({
+    rol: "admin",
+    nombre_usuario: "usuario1",
+    estado: "activo", 
+    fk_cdi_id: cdi.id_cdi,
+    contrasena: "123456",
+  });
+
+  console.log("Usuarios de prueba creados correctamente.");
+}
+
 
 
 const dataBaseConnect = async () => {
@@ -11,7 +90,9 @@ const dataBaseConnect = async () => {
       await sequelize.sync({ 
         force: false, // true = elimina y recrea tablas
         alter: true   // true = modifica tablas existentes
-      });
+      }).then(() => {
+        // crearUsuariosDePrueba({ Usuario, CDI, Persona })
+      })
       console.log('✅ Modelos sincronizados correctamente');
       
     } catch (error) {
