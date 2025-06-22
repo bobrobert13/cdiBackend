@@ -61,10 +61,15 @@ const createToken = (options) => {
     iat: moment().unix(),
     exp: moment().add(365, "days").unix(),
   }
-  token.payload = Object.assign(options, times);
-  token.code = jwt.sign({data :token.payload}, config.secret);
-  return token;
+  token.payload = options;
+  token.code = jwt.sign({data: options}, config.secret);
+  return {
+    usuario: token.payload,
+    token: token.code,
+  };
 }
+
+
 const resetPasswordToken = (options) => {
   const token = {};
   const times = {

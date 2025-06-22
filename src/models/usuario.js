@@ -10,14 +10,12 @@ const Usuario = sequelize.define('Usuario', {
 
   rol: {
     type: DataTypes.STRING(50),
-    allowNull: false,
-    defaultValue: 'usuario'
+    allowNull: true,
   },
 
   nombre_usuario: {
     type: DataTypes.STRING(100),
     allowNull: false,
-    unique: true
   },
 
   contrasena: {

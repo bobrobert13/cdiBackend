@@ -17,7 +17,6 @@ const Doctor = sequelize.define('Doctor', {
   numero_carnet: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    unique: true
   },
 
   area_de_trabajo: {

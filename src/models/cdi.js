@@ -11,7 +11,6 @@ const CDI = sequelize.define('CDI', {
   numero_cdi: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    unique: true,
     validate: {
       notEmpty: true
     }
@@ -44,12 +43,6 @@ const CDI = sequelize.define('CDI', {
 }, {
   tableName: 'cdis',
   timestamps: true,
-  indexes: [
-    {
-      unique: true,
-      fields: ['numero_cdi']
-    },
-  ]
 });
 
 return CDI;

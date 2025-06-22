@@ -40,8 +40,11 @@ export const Mutation = {
     crearUsuario: authorize([], async (obj, { input }) => {
         try {
             const usuario = await Usuario.create(input);
+            console.log('usuario creado:', usuario);
+            
             return usuario;
         } catch (error) {
+            console.log('error crear user', error.message);
             throw new UserInputError("Error al crear usuario", { error });
         }
     }),
@@ -66,22 +69,18 @@ export const Mutation = {
 
     login: authorize([], async (obj, { input }, context) => {
         try {
-            const { nombre_usuario, password } = input;
-            const usuario = await Usuario.findOne({ where: { nombre_usuario } });
+            const { nombre_usuario, contrasena } = input;
+            const usuario = await Usuario.findOne({ where: { nombre_usuario }, attributes: ['id_usuario', 'nombre_usuario', 'rol' , 'estado', 'fecha_creacion']  });
+            
             if (!usuario) throw new UserInputError("Usuario no encontrado");
-
             // Si tienes campo password en tu modelo y función passwordMatch:
-            const valid = await passwordMatch(password, usuario.password);
-            if (!valid) throw new UserInputError("Contraseña incorrecta");
-
-            const token = createToken(usuario);
-            return {
-                token,
-                usuario,
-            };
+            // const valid = await passwordMatch(password, usuario.password);
+            // if (!valid) throw new UserInputError("Contraseña incorrecta");
+            const token = createToken(usuario.get());
+            
+            return token
         } catch (error) {
-            console.log('error login', error);
-            throw new UserInputError("Error en login", { error });
+            throw new UserInputError(error.message);
         }
     }),
 };

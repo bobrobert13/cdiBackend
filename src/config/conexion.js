@@ -6,17 +6,17 @@ const {Usuario, CDI, Persona, Doctor
 async function crearUsuariosDePrueba({ Usuario, CDI, Persona }) {
   // Primero, crea un CDI de prueba (si no existe)
   const cdi = await CDI.create({
-    numero_cdi: "CDI-001",
+    numero_cdi: "CDI-000",
     nombre: "CDI Central",
-    encargado: "Dr. Encargado",
+    encargado: "Dr. Robert",
     cuadrante: "A1"
   });
 
   // Crea personas de prueba (si quieres asociar usuarios con personas)
   const personaAdmin = await Persona.create({
-    nombre1: "Ana",
-    apellido1: "Pérez",
-    sexo: "F",
+    nombre1: "Robert",
+    apellido1: "Caraballo",
+    sexo: "M",
     cedula_identidad: "V12345678",
     fk_cdi_id: cdi.id_cdi
   });
@@ -29,6 +29,14 @@ async function crearUsuariosDePrueba({ Usuario, CDI, Persona }) {
     fk_cdi_id: cdi.id_cdi
   });
 
+  const personaDoctor2 = await Persona.create({
+    nombre1: "Enrique",
+    apellido1: "Abache",
+    sexo: "M",
+    cedula_identidad: "V87214321",
+    fk_cdi_id: cdi.id_cdi
+  });
+
   // Crea usuarios de prueba con diferentes roles
   const doctor = await Doctor.create({
     anos_experiencia: 5,
@@ -38,41 +46,45 @@ async function crearUsuariosDePrueba({ Usuario, CDI, Persona }) {
     fk_persona_id: personaDoctor.id_persona
   });
 
-  await Usuario.create({
-    rol: "doctor",
-    nombre_usuario: "doctor1",
-    estado: "activo",
-    fk_cdi_id: cdi.id_cdi,
-    fk_doctor_id: doctor.id_doctor,
-    contrasena: "123456"
-    // contrasena: await hashcontrasena("doctor123"),
-  });
-
-  await Usuario.create({
-    rol: "admin",
-    nombre_usuario: "admin1",
-    estado: "activo",
-    fk_cdi_id: cdi.id_cdi,
-    fk_doctor_id: doctor.id_doctor,
-    contrasena: "123456"
-
+  const doctor2 = await Doctor.create({
+    anos_experiencia: 2,
+    numero_carnet: "DOC-002",
+    area_de_trabajo: "Quirofano",
+    horario: "Lunes a Viernes 8:00-16:00",
+    fk_persona_id: personaDoctor2.id_persona
   });
 
   await Usuario.create({
     rol: "doctor",
-    nombre_usuario: "doctor1",
+    nombre_usuario: "DrCarlos",
     estado: "activo",
     fk_cdi_id: cdi.id_cdi,
-    contrasena: "123456",
+    fk_doctor_id: doctor.id_doctor,
+    contrasena: "123456"
+  });
 
+  await Usuario.create({
+    rol: "doctor",
+    nombre_usuario: "DrEnrique",
+    estado: "activo",
+    fk_cdi_id: cdi.id_cdi,
+    fk_doctor_id: doctor2.id_doctor,
+    contrasena: "123456",
+  });
+
+  await Usuario.create({
+    rol: "cdi",
+    nombre_usuario: "cdi-admin",
+    estado: "activo",
+    fk_cdi_id: cdi.id_cdi,
+    contrasena: "123456"
   });
 
   await Usuario.create({
     rol: "admin",
-    nombre_usuario: "usuario1",
-    estado: "activo", 
-    fk_cdi_id: cdi.id_cdi,
-    contrasena: "123456",
+    nombre_usuario: "superadmin",
+    estado: "activo",
+    contrasena: "123456"
   });
 
   console.log("Usuarios de prueba creados correctamente.");

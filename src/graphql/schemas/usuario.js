@@ -21,6 +21,7 @@ const types = `
   input CrearUsuarioInput {
     rol: String!
     nombre_usuario: String!
+    contrasena: String!
     estado: EstadoUsuario
     fk_doctor_id: Int
     fk_cdi_id: Int
@@ -30,6 +31,7 @@ const types = `
   input ActualizarUsuarioInput {
     rol: String
     nombre_usuario: String
+    contrasena: String
     estado: EstadoUsuario
     fk_seguridad_id: Int
   }

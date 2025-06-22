@@ -2,7 +2,7 @@ import { UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
 // Asume que tienes un modelo Usuario de Sequelize importado:
-import { Persona, Telefono, Correo, Direccion } from "../../models"; // Ajusta el path según tu estructura
+import { Persona, Telefono, Correo, Direccion, Usuario, Doctor } from "../../models"; // Ajusta el path según tu estructura
 
 //input example:
 // {
@@ -28,6 +28,12 @@ import { Persona, Telefono, Correo, Direccion } from "../../models"; // Ajusta e
 //       "correoInput": {
 //         "correo": "ana.ruiz@ejemplo.com"
 //       },
+//     "usuarioInput": {
+//       "nombre_usuario": "DrAna",
+//       "contrasena": "123456",
+//       "rol": "doctor",
+//       "estado": "activo"
+//     }
 //       "direccionInput": {
 //         "parroquia": "Centro",
 //         "codigo_postal": "1010",
@@ -59,6 +65,12 @@ import { Persona, Telefono, Correo, Direccion } from "../../models"; // Ajusta e
 //         "numero_casa": "33",
 //         "calle": "Secundaria"
 //       }
+//     },
+//     "usuarioInput": {
+//       "nombre_usuario": "DrAna",
+//       "contrasena": "123456",
+//       "rol": "doctor",
+//       "estado": "activo"
 //     }
 //   }
 // }
@@ -83,7 +95,7 @@ export const Query = {
 
 export const Mutation = {
   crearDoctor: async (parent, { input }) => {
-    const { personaInput, ...doctorInput } = input;
+    const { personaInput, usuarioInput, doctorInput } = input;
 
     // Crear teléfono, correo y dirección si vienen
     let telefono = null, correo = null, direccion = null;
@@ -117,8 +129,14 @@ export const Mutation = {
       fk_persona_id: persona.id_persona,
     });
 
+    const usuario = await Usuario.create({
+      ...usuarioInput,
+      fk_doctor_id: doctor.id_doctor,
+      fk_cdi_id: personaInput.fk_cdi_id,
+    });
+
     // Retornar doctor con relaciones anidadas
-    return await Doctor.findByPk(doctor.id_doctor, {
+    const doctorResults = await Doctor.findByPk(doctor.id_doctor, {
       include: [
         {
           model: Persona,
@@ -131,6 +149,8 @@ export const Mutation = {
         },
       ],
     });
+    console.log('doctor creaado: ', doctorResults.get());
+    return doctorResults.get()
   },
   
   actualizarDoctor: async (parent, { id_doctor, input }) => {

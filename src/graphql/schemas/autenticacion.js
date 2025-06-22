@@ -20,7 +20,7 @@ const types = `
     fk_seguridad_id: Int
   }
 `;
-
+  
 const queries = `
   verificarToken(token: String!): Usuario
 `;

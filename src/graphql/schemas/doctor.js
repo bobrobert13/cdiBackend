@@ -9,14 +9,20 @@ const types = `
     area_de_trabajo: String!
     horario: String
     fk_persona_id: Int
+    usuario: Usuario
   }
 
-input CrearDoctorInput {
+  input dataDoctorInput {
   anos_experiencia: Int!
   numero_carnet: String!
   area_de_trabajo: String!
   horario: String
+  }
+
+input CrearDoctorInput {
+  doctorInput: dataDoctorInput!
   personaInput: CrearPersonaInput!
+  usuarioInput: CrearUsuarioInput!
 }
 
 input ActualizarDoctorInput {
@@ -25,6 +31,7 @@ input ActualizarDoctorInput {
   area_de_trabajo: String
   horario: String
   personaInput: ActualizarPersonaInput
+  usuarioInput: ActualizarUsuarioInput
 }
 `;
 
