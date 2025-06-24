@@ -6,6 +6,7 @@ const types = `
     nombre: String!
     encargado: String
     cuadrante: String
+    usuario: Usuario
   }
 
   input CrearCDIInput {
@@ -13,6 +14,7 @@ const types = `
     nombre: String!
     encargado: String
     cuadrante: String
+    usuarioInput: CrearUsuarioInput!
   }
 
   input ActualizarCDIInput {
@@ -20,6 +22,7 @@ const types = `
     nombre: String
     encargado: String
     cuadrante: String
+    usuarioInput: ActualizarUsuarioInput
   }
 `;
 
@@ -32,6 +35,7 @@ const mutations = `
   crearCDI(input: CrearCDIInput!): CDI!
   actualizarCDI(id_cdi: ID!, input: ActualizarCDIInput!): CDI!
   eliminarCDI(id_cdi: ID!): Boolean!
+  inhabilitarCDI(id_cdi: ID!, estado: String!): Boolean!
 `;
 
 export { types, queries, mutations };

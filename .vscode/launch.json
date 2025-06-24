@@ -5,6 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch via NPM",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "debug"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "args": [
+                "--port",
+                "4000"
+            ]
+        },
+        {
             "name": "Launch Program",
             "program": "${workspaceFolder}/server.js",
             "request": "launch",
@@ -20,11 +37,11 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch CDI",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}",
+            "program": "${workspaceFolder}/server.js",
             "args": [
                 "--port",
                 "4000"

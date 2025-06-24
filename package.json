@@ -6,6 +6,7 @@
   "email": "rob132ca@gmail.com",
   "scripts": {
     "dev": "NODE_ENV=development  nodemon ./src/server.js --exec babel-node",
+    "debug": "NODE_ENV=development  nodemon ./src/server.js --exec babel-node",
     "migrate": "node scripts/migrate.js",
     "db": "NODE_ENV=development nodemon ./scripts/createdb.js --exec babel-node",
     "createAdmin": "node ./scripts/createAdmin.js --exec babel-node"

@@ -1,8 +1,7 @@
 import { ApolloError, UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
-// Asume que tienes un modelo Usuario de Sequelize importado:
-import { Persona, Telefono, Correo, Direccion, Usuario, Doctor } from "../../models"; // Ajusta el path según tu estructura
+import { Persona, Telefono, Correo, Direccion, Usuario, Doctor } from "../../models"; 
 
 //input example:
 // {

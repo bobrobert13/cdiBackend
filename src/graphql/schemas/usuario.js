@@ -19,9 +19,9 @@ const types = `
   }
 
   input CrearUsuarioInput {
-    rol: String!
+    rol: String
     nombre_usuario: String!
-    contrasena: String!
+    contrasena: String
     estado: EstadoUsuario
     fk_doctor_id: Int
     fk_cdi_id: Int
