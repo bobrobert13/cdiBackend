@@ -285,6 +285,31 @@ export const Mutation = {
       }
     };
   },
+
+  inhabilitarDoctor: async (parent, { id_doctor, estado }) => {
+    try {
+      const doctor = await Doctor.findByPk(id_doctor);
+      
+      if (!doctor) {
+        throw new Error('Doctor no encontrado');
+      }
+  
+      const [updated] = await Usuario.update(
+        { estado: estado },
+        { where: { fk_doctor_id: doctor.id_doctor } }
+      );
+  
+      if (updated === 0) {
+        throw new Error('No se encontró ningún usuario asociado para inhabilitar');
+      }
+  
+      return true;
+    } catch (error) {
+      console.error('Error inhabilitando al doctor:', error);
+      throw new Error('Error al inhabilitar al doctor');
+    }
+  },
+  
   
   eliminarDoctor: async (parent, { id_doctor }) => {
     // Buscar el doctor con todas las relaciones anidadas

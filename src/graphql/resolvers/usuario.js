@@ -71,8 +71,11 @@ export const Mutation = {
         try {
             const { nombre_usuario, contrasena } = input;
             const usuario = await Usuario.findOne({ where: { nombre_usuario }, attributes: ['id_usuario', 'nombre_usuario', 'rol' , 'estado', 'fecha_creacion']  });
-            
+
             if (!usuario) throw new UserInputError("Usuario no encontrado");
+            if (usuario.estado !== "activo") {
+                throw new UserInputError("Usuario inactivo o suspendido");
+              }
             // Si tienes campo password en tu modelo y función passwordMatch:
             // const valid = await passwordMatch(password, usuario.password);
             // if (!valid) throw new UserInputError("Contraseña incorrecta");

@@ -40,6 +40,7 @@ const mutations = `
   crearDoctor(input: CrearDoctorInput!): Doctor!
   actualizarDoctor(id_doctor: ID!, input: ActualizarDoctorInput!): Doctor!
   eliminarDoctor(id_doctor: ID!): Boolean!
+  inhabilitarDoctor(id_doctor: ID!, estado: String!): Boolean!
 `;
 
 export { types, queries, mutations };
