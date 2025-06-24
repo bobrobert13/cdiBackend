@@ -111,6 +111,9 @@ input ActualizarDireccionInput {
     estado_civil: String
     ocupacion: String
     cedula_identidad: String
+      telefonoInput: CrearTelefonoInput
+  correoInput: CrearCorreoInput
+  direccionInput: CrearDireccionInput
     fk_cdi_id: Int
     fk_direccion_id: Int
     fk_telefono_id: Int

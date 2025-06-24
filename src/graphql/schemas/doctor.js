@@ -2,14 +2,13 @@ import { persona } from './persona';
 
 const types = `
   type Doctor {
-    ${persona}
     id_doctor: ID!
     anos_experiencia: Int!
     numero_carnet: String!
     area_de_trabajo: String!
     horario: String
     fk_persona_id: Int
-    usuario: Usuario
+    persona: Persona
   }
 
   input dataDoctorInput {
@@ -26,10 +25,7 @@ input CrearDoctorInput {
 }
 
 input ActualizarDoctorInput {
-  anos_experiencia: Int
-  numero_carnet: String
-  area_de_trabajo: String
-  horario: String
+  doctorInput: dataDoctorInput!
   personaInput: ActualizarPersonaInput
   usuarioInput: ActualizarUsuarioInput
 }

@@ -19,7 +19,7 @@ const Direccion = sequelize.define('Direccion', {
   },
 
   numero_casa: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING(200),
     allowNull: true
   },
 

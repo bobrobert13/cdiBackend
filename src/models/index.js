@@ -33,23 +33,27 @@ Doctor.belongsTo(Persona, {
 
 Persona.hasOne(Doctor, {
     foreignKey: 'fk_persona_id',
+    onDelete: 'CASCADE',
     as: 'doctor'
 });
 
 // Relación entre Persona y Paciente
 Paciente.belongsTo(Persona, {
     foreignKey: 'fk_persona_id',
+    onDelete: 'CASCADE',
     as: 'persona'
 });
 
 Persona.hasOne(Paciente, {
     foreignKey: 'fk_persona_id',
+    onDelete: 'CASCADE',
     as: 'paciente'
 });
 
 //relacion entre el PERSONA y el cdi
 Persona.belongsTo(CDI, {
     foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
     as: 'cdi'
 });
 
@@ -112,6 +116,7 @@ CDI.hasMany(Usuario, {
 // relacion entre la persona y la direccion
 Persona.belongsTo(Direccion, {
     foreignKey: 'fk_direccion_id',
+    onDelete: 'CASCADE',
     as: 'direccion'
 });
 
@@ -124,6 +129,7 @@ Direccion.hasMany(Persona, {
 // relacion entre la persona y el telefono
 Persona.belongsTo(Telefono, {
     foreignKey: 'fk_telefono_id',
+    onDelete: 'CASCADE',
     as: 'telefono'
 });
 
@@ -136,6 +142,7 @@ Telefono.hasMany(Persona, {
 // relacion entre la persona y el correo
 Persona.belongsTo(Correo, {
     foreignKey: 'fk_correo_id',
+    onDelete: 'CASCADE',
     as: 'correo'
 });
 

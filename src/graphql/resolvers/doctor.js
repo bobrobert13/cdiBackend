@@ -1,4 +1,4 @@
-import { UserInputError } from "apollo-server-express";
+import { ApolloError, UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
 // Asume que tienes un modelo Usuario de Sequelize importado:
@@ -95,63 +95,70 @@ export const Query = {
 
 export const Mutation = {
   crearDoctor: async (parent, { input }) => {
-    const { personaInput, usuarioInput, doctorInput } = input;
+      const { personaInput, usuarioInput, doctorInput } = input;
 
-    // Crear teléfono, correo y dirección si vienen
-    let telefono = null, correo = null, direccion = null;
-    if (personaInput.telefonoInput) {
-      telefono = await Telefono.create(personaInput.telefonoInput);
-    }
-    if (personaInput.correoInput) {
-      correo = await Correo.create(personaInput.correoInput);
-    }
-    if (personaInput.direccionInput) {
-      direccion = await Direccion.create(personaInput.direccionInput);
-    }
-
-    // Crear persona
-    const personaData = {
-      ...personaInput,
-      fk_telefono_id: telefono ? telefono.id_telefono : null,
-      fk_correo_id: correo ? correo.id_correo : null,
-      fk_direccion_id: direccion ? direccion.id_direccion : null,
-    };
-    // Limpiar subinputs
-    delete personaData.telefonoInput;
-    delete personaData.correoInput;
-    delete personaData.direccionInput;
-
-    const persona = await Persona.create(personaData);
-
-    // Crear doctor asociado a persona
-    const doctor = await Doctor.create({
-      ...doctorInput,
-      fk_persona_id: persona.id_persona,
-    });
-
-    const usuario = await Usuario.create({
-      ...usuarioInput,
-      fk_doctor_id: doctor.id_doctor,
-      fk_cdi_id: personaInput.fk_cdi_id,
-    });
-
-    // Retornar doctor con relaciones anidadas
-    const doctorResults = await Doctor.findByPk(doctor.id_doctor, {
-      include: [
-        {
-          model: Persona,
-          as: "persona",
-          include: [
-            { model: Telefono, as: "telefono" },
-            { model: Correo, as: "correo" },
-            { model: Direccion, as: "direccion" },
-          ],
-        },
-      ],
-    });
-    console.log('doctor creaado: ', doctorResults.get());
-    return doctorResults.get()
-  },
+      // Crear teléfono, correo y dirección si vienen
+      let telefono = null, correo = null, direccion = null;
+      if (personaInput.telefonoInput) {
+        telefono = await Telefono.create(personaInput.telefonoInput);
+      }
+      if (personaInput.correoInput) {
+        correo = await Correo.create(personaInput.correoInput);
+      }
+      if (personaInput.direccionInput) {
+        direccion = await Direccion.create(personaInput.direccionInput);
+      }
+  
+      // Crear persona
+      const personaData = {
+        ...personaInput,
+        fk_telefono_id: telefono ? telefono.id_telefono : null,
+        fk_correo_id: correo ? correo.id_correo : null,
+        fk_direccion_id: direccion ? direccion.id_direccion : null,
+      };
+      // Limpiar subinputs
+      delete personaData.telefonoInput;
+      delete personaData.correoInput;
+      delete personaData.direccionInput;
+  
+      const persona = await Persona.create(personaData);
+  
+      // Crear doctor asociado a persona
+      const doctor = await Doctor.create({
+        ...doctorInput,
+        fk_persona_id: persona.id_persona,
+      });
+  
+      const usuario = await Usuario.create({
+        ...usuarioInput,
+        fk_doctor_id: doctor.id_doctor,
+        fk_cdi_id: personaInput.fk_cdi_id,
+      });
+  
+      // Retornar doctor con relaciones anidadas
+      const doctorResults = await Doctor.findByPk(doctor.id_doctor, {
+        include: [
+          {
+            model: Persona,
+            as: "persona",
+            include: [
+              { model: Telefono, as: "telefono" },
+              { model: Correo, as: "correo" },
+              { model: Direccion, as: "direccion" },
+            ],
+          },
+        ],
+      });
+      return {
+        ...doctorResults.get(),
+        persona: {
+          ...doctorResults.get().persona.get(),
+          telefono: doctorResults.get().persona.get().telefono.get(),
+          correo: doctorResults.get().persona.get().correo.get(),
+          direccion: doctorResults.get().persona.get().direccion.get(),
+        }
+      };
+    },
   
   actualizarDoctor: async (parent, { id_doctor, input }) => {
     // 1. Buscar el doctor existente
@@ -173,44 +180,49 @@ export const Mutation = {
 
     // 2. Actualizar datos del doctor
     await doctor.update({
-      anos_experiencia: input.anos_experiencia || doctor.anos_experiencia,
-      numero_carnet: input.numero_carnet || doctor.numero_carnet,
-      area_de_trabajo: input.area_de_trabajo || doctor.area_de_trabajo,
-      horario: input.horario || doctor.horario,
+      anos_experiencia: input.doctorInput.anos_experiencia || doctor.anos_experiencia,
+      numero_carnet: input.doctorInput.numero_carnet || doctor.numero_carnet,
+      area_de_trabajo: input.doctorInput.area_de_trabajo || doctor.area_de_trabajo,
+      horario: input.doctorInput.horario || doctor.horario,
     });
 
     // 3. Si viene personaInput, actualizar persona y sus relaciones
     if (input.personaInput) {
       const personaInput = input.personaInput;
-      const persona = doctor.persona;
+      const persona = doctor.persona.get();
+      const telefonoActual = persona.telefono.get();
+      const correoActual = persona.correo.get();
+      const direccionActual = persona.direccion.get();
+
 
       // Actualizar teléfono si viene
       if (personaInput.telefonoInput) {
-        if (persona.telefono) {
-          await persona.telefono.update(personaInput.telefonoInput);
+        if (telefonoActual) {
+          await Telefono.update(personaInput.telefonoInput, { where: { id_telefono: telefonoActual.id_telefono } });
         } else {
           const nuevoTelefono = await Telefono.create(personaInput.telefonoInput);
-          await persona.update({ fk_telefono_id: nuevoTelefono.id_telefono });
+          await Persona.update({ fk_telefono_id: nuevoTelefono.id_telefono }, { where: { id_persona: persona.id_persona } });
         }
       }
 
       // Actualizar correo si viene
       if (personaInput.correoInput) {
-        if (persona.correo) {
-          await persona.correo.update(personaInput.correoInput);
-        } else {
+        if (correoActual.correo) {
+          await Correo.update(personaInput.correoInput, { where: { id_correo: correoActual.id_correo } });
+        } 
+        else {
           const nuevoCorreo = await Correo.create(personaInput.correoInput);
-          await persona.update({ fk_correo_id: nuevoCorreo.id_correo });
+          await Persona.update({ fk_correo_id: nuevoCorreo.id_correo }, { where: { id_persona: persona.id_persona } });
         }
       }
 
       // Actualizar dirección si viene
       if (personaInput.direccionInput) {
-        if (persona.direccion) {
-          await persona.direccion.update(personaInput.direccionInput);
+        if (direccionActual.id_direccion) {
+          await Direccion.update(personaInput.direccionInput, { where: { id_direccion: direccionActual.id_direccion } });
         } else {
           const nuevaDireccion = await Direccion.create(personaInput.direccionInput);
-          await persona.update({ fk_direccion_id: nuevaDireccion.id_direccion });
+          await Persona.update({ fk_direccion_id: nuevaDireccion.id_direccion }, { where: { id_persona: persona.id_persona } });
         }
       }
 
@@ -220,11 +232,27 @@ export const Mutation = {
       delete camposPersona.correoInput;
       delete camposPersona.direccionInput;
 
-      await persona.update(camposPersona);
+      await Persona.update(camposPersona, { where: { id_persona: persona.id_persona } });
+    }
+
+    // SI VIENE usuarioInput, actualizar el usuario:
+    if(input.usuarioInput){
+      const usuarioInput = input.usuarioInput;
+      const usuario = await Usuario.findOne({
+        where: {
+          fk_doctor_id: doctor.id_doctor,
+        }
+      });
+      await usuario.update({
+        nombre_usuario: usuarioInput.nombre_usuario || usuario.nombre_usuario,
+        contrasena: usuarioInput.contrasena || usuario.contrasena,
+        // rol: usuarioInput.rol || usuario.rol,
+        estado: usuarioInput.estado || usuario.estado,
+      });
     }
 
     // 4. Retornar doctor actualizado con todas las relaciones
-    return await Doctor.findByPk(doctor.id_doctor, {
+   const doctorActualizado = await Doctor.findByPk(doctor.id_doctor, {
       include: [
         {
           model: Persona,
@@ -237,6 +265,25 @@ export const Mutation = {
         },
       ],
     });
+    console.log('doctor actualizado:', {
+      ...doctorActualizado.get(),
+      persona: {
+        ...doctorActualizado.get().persona.get(),
+        telefono: doctorActualizado.get().persona.get().telefono.get(),
+        correo: doctorActualizado.get().persona.get().correo.get(),
+        direccion: doctorActualizado.get().persona.get().direccion.get(),
+      }
+    });
+    
+    return {
+      ...doctorActualizado.get(),
+      persona: {
+        ...doctorActualizado.get().persona.get(),
+        telefono: doctorActualizado.get().persona.get().telefono.get(),
+        correo: doctorActualizado.get().persona.get().correo.get(),
+        direccion: doctorActualizado.get().persona.get().direccion.get(),
+      }
+    };
   },
   
   eliminarDoctor: async (parent, { id_doctor }) => {
