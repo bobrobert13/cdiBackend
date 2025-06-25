@@ -156,6 +156,15 @@ Correo.hasMany(Persona, {
 Doctor.hasMany(Consulta, {
     foreignKey: 'fk_doctor_id',
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    as: 'consultas'
+});
+
+
+CDI.hasMany(Consulta, {
+    foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
     as: 'consultas'
 });
 
@@ -163,8 +172,14 @@ Doctor.hasMany(Consulta, {
 Paciente.hasMany(Consulta, {
     foreignKey: 'fk_paciente_id',
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
     as: 'consultas'
 });
+
+Consulta.belongsTo(Doctor, { foreignKey: 'fk_doctor_id', as: 'doctores' });
+Consulta.belongsTo(CDI, { foreignKey: 'fk_cdi_id', as: 'cdis' });
+Consulta.belongsTo(Paciente, { foreignKey: 'fk_paciente_id', as: 'pacientes' });
+
 
 // Las consultas generan un historial medico
 
@@ -174,33 +189,58 @@ Consulta.hasOne(HistorialMedico, {
 });
 
 // paciente se registra por una emergencia
-Paciente.hasOne(Emergencia, {
+
+
+Doctor.hasMany(Emergencia, {
+    foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    as: 'emergencias'
+});
+
+
+Paciente.hasMany(Emergencia, {
     foreignKey: 'fk_paciente_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    as: 'emergencias'
+});
+
+CDI.hasMany(Emergencia, {
+    foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
     as: 'emergencias'
 });
 
 // emergencia tiene un paciente
 Emergencia.belongsTo(Paciente, {
     foreignKey: 'fk_paciente_id',
-    as: 'paciente'
+    as: 'pacientes'
 });
 
 // emergencia tiene un doctor
 Emergencia.belongsTo(Doctor, {
     foreignKey: 'fk_doctor_id',
-    as: 'doctor'
+    as: 'doctores'
+});
+
+Emergencia.belongsTo(CDI, {
+    foreignKey: 'fk_cdi_id',
+    as: 'cdis'
 });
 
 // emergencia tiene un historial medico
-Emergencia.hasOne(HistorialMedico, {
-    foreignKey: 'fk_emergencia_id',
-    as: 'historial_medico'
-});
+// Emergencia.hasOne(HistorialMedico, {
+//     foreignKey: 'fk_emergencia_id',
+//     as: 'historial_medico'
+// });
 
 //  doctor puede registrar una hospitalizacion
 Doctor.hasMany(Hospitalizacion, {
     foreignKey: 'fk_doctor_id',
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
     as: 'hospitalizaciones'
 });
 
@@ -220,6 +260,7 @@ Hospitalizacion.belongsTo(Doctor, {
 Doctor.hasMany(Diagnostico, {
     foreignKey: 'fk_doctor_id',
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
     as: 'diagnosticos'
 });
 
@@ -227,19 +268,32 @@ Doctor.hasMany(Diagnostico, {
 Paciente.hasMany(Diagnostico, {
     foreignKey: 'fk_paciente_id',
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    as: 'diagnosticos'
+});
+
+CDI.hasMany(Diagnostico, {
+    foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
     as: 'diagnosticos'
 });
 
 // diagnostico tiene un paciente
 Diagnostico.belongsTo(Paciente, {
     foreignKey: 'fk_paciente_id',
-    as: 'paciente'
+    as: 'pacientes'
 });
 
 // diagnostico tiene un doctor
 Diagnostico.belongsTo(Doctor, {
     foreignKey: 'fk_doctor_id',
-    as: 'doctor'
+    as: 'doctores'
+});
+
+Diagnostico.belongsTo(CDI, {
+    foreignKey: 'fk_cdi_id',
+    as: 'cdis'
 });
 
 // doctor puede registrar un examen del paciente

@@ -8,12 +8,7 @@ const Consulta = sequelize.define('Consulta', {
     autoIncrement: true
   },
 
-  fecha_hora: {
-    type: DataTypes.DATE,
-    allowNull: false
-  },
-
-  tipo_consulta: {
+  tipo_consulta: { // "General", "Especialista", "Emergencia"
     type: DataTypes.STRING(100),
     allowNull: false
   },
@@ -27,17 +22,37 @@ const Consulta = sequelize.define('Consulta', {
     type: DataTypes.TEXT,
     allowNull: true
   },
+
   notas_medicas: {
     type: DataTypes.TEXT,
     allowNull: true
   },
+
   fk_doctor_id: {
     type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'doctores',
+      key: 'id_doctor'
+    }
+  },
+
+  fk_cdi_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'cdis',
+      key: 'id_cdi'
+    },
     allowNull: false
   },
+
   fk_paciente_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: 'pacientes',
+      key: 'id_paciente'
+    }
   }
 }, {
   tableName: 'consultas',

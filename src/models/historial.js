@@ -22,7 +22,6 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     type: DataTypes.STRING(100),
     allowNull: true
   },
-
   usuario_responsable: {
     type: DataTypes.STRING(100),
     allowNull: false
@@ -32,7 +31,6 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     type: DataTypes.TEXT,
     allowNull: true
   },
-
   categoria_evento: {
     type: DataTypes.ENUM(
       'Consulta',

@@ -7,7 +7,6 @@ import { Paciente, Persona, Telefono, Correo, Direccion } from "../../models";
 // input create example:
 // {
 //   "input": {
-//     "fecha_registro": "2024-06-22",
 //     "enfermedades_cronicas": "Ninguna",
 //     "peso": 72.5,
 //     "vacunas": "Covid, Hepatitis",
@@ -110,101 +109,113 @@ export const Query = {
 export const Mutation = {
 
   crearPaciente: async (parent, { input }) => {
-    const { personaInput, ...pacienteInput } = input;
-
-    // 1. Crear registros relacionados si vienen en el input
-    let telefono = null, correo = null, direccion = null;
-
-    if (personaInput.telefonoInput) {
-      telefono = await Telefono.create(personaInput.telefonoInput);
+    try {
+      const { personaInput, ...pacienteInput } = input;
+    
+      // 1. Validar que no exista una persona con la misma cedula_identidad
+      const personaExistente = await Persona.findOne({
+        where: { cedula_identidad: personaInput.cedula_identidad }
+      });
+      if (personaExistente) {
+        throw new UserInputError("Ya existe una persona con esa cédula de identidad");
+      }
+    
+      // 2. Crear registros relacionados si vienen en el input
+      let telefono = null, correo = null, direccion = null;
+    
+      if (personaInput.telefonoInput) {
+        telefono = await Telefono.create(personaInput.telefonoInput);
+      }
+      if (personaInput.correoInput) {
+        correo = await Correo.create(personaInput.correoInput);
+      }
+      if (personaInput.direccionInput) {
+        direccion = await Direccion.create(personaInput.direccionInput);
+      }
+    
+      // 3. Crear persona con las llaves foráneas de los registros creados
+      const personaData = {
+        ...personaInput,
+        fk_telefono_id: telefono ? telefono.id_telefono : null,
+        fk_correo_id: correo ? correo.id_correo : null,
+        fk_direccion_id: direccion ? direccion.id_direccion : null,
+      };
+    
+      // Quitar los inputs anidados para evitar error en el modelo
+      delete personaData.telefonoInput;
+      delete personaData.correoInput;
+      delete personaData.direccionInput;
+    
+      const persona = await Persona.create(personaData);
+    
+      // 4. Crear paciente con la llave foránea de persona
+      const paciente = await Paciente.create({
+        ...pacienteInput,
+        fk_persona_id: persona.id_persona,
+      });
+    
+      // 5. Retornar paciente con las relaciones anidadas
+      const nuevoPaciente = await Paciente.findByPk(paciente.id_paciente, {
+        include: [
+          {
+            model: Persona,
+            as: "persona",
+            include: [
+              { model: Telefono, as: "telefono" },
+              { model: Correo, as: "correo" },
+              { model: Direccion, as: "direccion" },
+            ],
+          },
+        ],
+      });
+    
+      return {
+        ...nuevoPaciente.get(),
+        persona: {
+          ...nuevoPaciente.persona.get(),
+          telefono: nuevoPaciente.persona.get().telefono.get(),
+          correo: nuevoPaciente.persona.get().correo.get(),
+          direccion: nuevoPaciente.persona.get().direccion.get(),
+        }
+      };
+    } catch (error) {
+      throw new UserInputError(error.message);
     }
-    if (personaInput.correoInput) {
-      correo = await Correo.create(personaInput.correoInput);
-    }
-    if (personaInput.direccionInput) {
-      direccion = await Direccion.create(personaInput.direccionInput);
-    }
-
-    // 2. Crear persona con las llaves foráneas de los registros creados
-    const personaData = {
-      ...personaInput,
-      fk_telefono_id: telefono ? telefono.id_telefono : null,
-      fk_correo_id: correo ? correo.id_correo : null,
-      fk_direccion_id: direccion ? direccion.id_direccion : null,
-    };
-
-    // Quitar los inputs anidados para evitar error en el modelo
-    delete personaData.telefonoInput;
-    delete personaData.correoInput;
-    delete personaData.direccionInput;
-
-    const persona = await Persona.create(personaData);
-
-    // 3. Crear paciente con la llave foránea de persona
-    const paciente = await Paciente.create({
-      ...pacienteInput,
-      fk_persona_id: persona.id_persona,
-    });
-
-    // 4. Retornar paciente con las relaciones anidadas
-    return await Paciente.findByPk(paciente.id_paciente, {
-      include: [
-        {
-          model: Persona,
-          as: "persona",
-          include: [
-            { model: Telefono, as: "telefono" },
-            { model: Correo, as: "correo" },
-            { model: Direccion, as: "direccion" },
-          ],
-        },
-      ],
-    });
   },
 
 
-  // Actualizar un paciente existente
   actualizarPaciente: async (parent, { id_paciente, input }) => {
-    // Desestructuramos los posibles campos anidados
     const { personaInput, ...pacienteInput } = input;
 
-    // 1. Buscar paciente
     const paciente = await Paciente.findByPk(id_paciente);
     if (!paciente) throw new UserInputError("Paciente no encontrado");
 
-    // 2. Actualizar datos de paciente
-    await paciente.update(pacienteInput);
+    await Paciente.update(pacienteInput, { where: { id_paciente } });
 
-    // 3. Si viene personaInput, actualizar persona y sus relaciones
     if (personaInput) {
       const persona = await Persona.findByPk(paciente.fk_persona_id);
       if (!persona) throw new UserInputError("Persona asociada no encontrada");
 
-      // Actualizar datos de persona
       const { telefonoInput, correoInput, direccionInput, ...restPersona } = personaInput;
-      await persona.update(restPersona);
+      await Persona.update(restPersona, { where: { id_persona: paciente.fk_persona_id } });
 
-      // Actualizar teléfono si viene
-      if (telefonoInput && persona.fk_telefono_id) {
-        const telefono = await Telefono.findByPk(persona.fk_telefono_id);
-        if (telefono) await telefono.update(telefonoInput);
+      if (telefonoInput && persona.get().fk_telefono_id) {
+        const telefono = await Telefono.findByPk(persona.get().fk_telefono_id);
+        if (telefono) await Telefono.update(telefonoInput, { where: { id_telefono: persona.get().fk_telefono_id } });
       }
 
-      // Actualizar correo si viene
-      if (correoInput && persona.fk_correo_id) {
-        const correo = await Correo.findByPk(persona.fk_correo_id);
-        if (correo) await correo.update(correoInput);
+      if (correoInput && persona.get().fk_correo_id) {
+        const correo = await Correo.findByPk(persona.get().fk_correo_id);
+        if (correo) await Correo.update(correoInput, { where: { id_correo: persona.get().fk_correo_id } });
       }
 
-      // Actualizar dirección si viene
-      if (direccionInput && persona.fk_direccion_id) {
-        const direccion = await Direccion.findByPk(persona.fk_direccion_id);
-        if (direccion) await direccion.update(direccionInput);
+      if (direccionInput && persona.get().fk_direccion_id) {
+        const direccion = await Direccion.findByPk(persona.get().fk_direccion_id);
+        if (direccion) await Direccion.update(direccionInput, { where: { id_direccion: persona.get().fk_direccion_id } });
       }
     }
 
-    // 4. Retornar el paciente actualizado con todas sus relaciones
-    return await Paciente.findByPk(id_paciente, {
+   const pacienteActualizado = await Paciente.findByPk(id_paciente, {
       include: [
         {
           model: Persona,
@@ -217,20 +228,41 @@ export const Mutation = {
         },
       ],
     });
+
+    return {
+      ...pacienteActualizado.get(),
+      persona: {
+        ...pacienteActualizado.persona.get(),
+        telefono: pacienteActualizado.persona.get().telefono.get(),
+        correo: pacienteActualizado.persona.get().correo.get(),
+        direccion: pacienteActualizado.persona.get().direccion.get(),
+      }
+    };
   },
 
   eliminarPaciente: async (parent, { id_paciente }) => {
+
     const paciente = await Paciente.findByPk(id_paciente);
     if (!paciente) throw new UserInputError("Paciente no encontrado");
-
-    // Eliminar la persona asociada (opcional, según reglas de negocio)
+  
     const persona = await Persona.findByPk(paciente.fk_persona_id);
-    await paciente.destroy();
-    if (persona) await persona.destroy();
+    if (persona) {
 
+      const correo = await Correo.findByPk(persona.fk_correo_id);
+      const telefono = await Telefono.findByPk(persona.fk_telefono_id);
+      const direccion = await Direccion.findByPk(persona.fk_direccion_id);
+  
+      if (correo) await correo.destroy();
+      if (telefono) await telefono.destroy();
+      if (direccion) await direccion.destroy();
+  
+      await persona.destroy();
+    }
+  
+    await paciente.destroy();
+  
     return true;
   },
-
   // Resolver explícito para el campo persona en Paciente (opcional si usas include)
   Paciente: {
     persona: async (paciente) => {

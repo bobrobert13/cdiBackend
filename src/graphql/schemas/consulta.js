@@ -1,0 +1,36 @@
+const types = `
+type Consulta {
+  id_consulta: ID!
+  tipo_consulta: String
+  motivo_consulta: String
+  sintomas: String
+  notas_medicas: String
+  createdAt: Date
+  updatedAt: Date
+  doctor: Doctor
+  cdi: CDI
+  paciente: Paciente
+}
+
+input ConsultaInput {
+  tipo_consulta: String!
+  motivo_consulta: String!
+  sintomas: String
+  notas_medicas: String
+  fk_doctor_id: ID!
+  fk_cdi_id: ID!
+  fk_paciente_id: ID!
+}
+
+`
+const queries = `
+  consulta(id_consulta: ID!): Consulta
+  consultas: [Consulta!]!
+`
+
+const mutations = `
+ crearConsulta(input: ConsultaInput!): Consulta!
+`
+
+
+export { types, queries, mutations }

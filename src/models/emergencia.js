@@ -8,11 +8,6 @@ const Emergencia = sequelize.define('Emergencia', {
     autoIncrement: true
   },
 
-  fecha_hora: {
-    type: DataTypes.DATE,
-    allowNull: false
-  },
-
   motivo_emergencia: {
     type: DataTypes.TEXT,
     allowNull: false
@@ -48,9 +43,37 @@ const Emergencia = sequelize.define('Emergencia', {
     type: DataTypes.STRING(200),
     allowNull: true,
     comment: 'Destino del paciente después de la emergencia'
+  },
+
+  fk_paciente_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'pacientes',
+      key: 'id_paciente'
+    }
+  },
+
+  fk_doctor_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'doctores',
+      key: 'id_doctor'
+    }
+  },
+
+  fk_cdi_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'cdis',
+      key: 'id_cdi'
+    }
   }
+
 }, {
-  tableName: 'emergencia',
+  tableName: 'emergencias',
   timestamps: true
 });
 

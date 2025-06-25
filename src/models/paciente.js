@@ -8,11 +8,6 @@ const Paciente = sequelize.define('Paciente', {
     autoIncrement: true
   },
 
-  fecha_registro: {
-    type: DataTypes.DATE,
-    allowNull: false
-  },
-
   enfermedades_cronicas: {
     type: DataTypes.TEXT,
     allowNull: true

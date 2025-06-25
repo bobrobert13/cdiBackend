@@ -38,14 +38,33 @@ const Hospitalizacion = sequelize.define('Hospitalizacion', {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  fk_doctor_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true
-  },
+  
   fk_paciente_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: 'pacientes',
+      key: 'id_paciente'
+    }
   },
+
+  fk_doctor_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'doctores',
+      key: 'id_doctor'
+    }
+  },
+
+  fk_cdi_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'cdis',
+      key: 'id_cdi'
+    }
+  }
 }, {
   tableName: 'hospitalizacion',
   timestamps: true

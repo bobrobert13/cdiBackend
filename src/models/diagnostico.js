@@ -36,6 +36,10 @@ const Diagnostico = sequelize.define('Diagnostico', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  fk_cdi_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
 }, {
   tableName: 'diagnosticos',
   timestamps: true

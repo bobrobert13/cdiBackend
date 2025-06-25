@@ -70,7 +70,7 @@ export const Mutation = {
     login: authorize([], async (obj, { input }, context) => {
         try {
             const { nombre_usuario, contrasena } = input;
-            const usuario = await Usuario.findOne({ where: { nombre_usuario }, attributes: ['id_usuario', 'nombre_usuario', 'rol' , 'estado', 'fecha_creacion']  });
+            const usuario = await Usuario.findOne({ where: { nombre_usuario }, attributes: ['id_usuario', 'fk_doctor_id', 'fk_cdi_id', 'nombre_usuario', 'rol' , 'estado', 'fecha_creacion']  });
 
             if (!usuario) throw new UserInputError("Usuario no encontrado");
             if (usuario.estado !== "activo") {
