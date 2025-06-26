@@ -1,4 +1,5 @@
 'use strict'
+require('dotenv').config();
 
 import http from 'http'
 import { ApolloServer } from 'apollo-server-express';
@@ -26,9 +27,15 @@ export default async function (app) {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    engine: {
+      apiKey: process.env.APOLLO_KEY,
+      graphRef: process.env.APOLLO_GRAPH_REF,
+      reporting: process.env.APOLLO_SCHEMA_REPORTING === 'true',
+    },
     method: 'POST',
     playground: process.env.NODE_ENV === 'development', // nueva interfaz grafica para probar esquema
     subscribe: true,
+
     onOperation: (message, params) => {
       console.log(`
           -----------------------

@@ -43,7 +43,7 @@ if (env !== "production") {
 app.dirBase = __dirname;
 console.log(app.dirBase);
 
-app.use("/files", serveStatic(__dirname + "/files"));
+app.use("/uploads", serveStatic(__dirname + "/uploads"));
 console.log(`
   :---------------------------------------
     port: ${process.env.PORT || 4000}
