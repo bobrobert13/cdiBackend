@@ -8,11 +8,6 @@ module.exports = (sequelize) => {
       autoIncrement: true
     },
 
-    fecha_examen: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-
     fk_doctor_id: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -53,14 +48,8 @@ module.exports = (sequelize) => {
       allowNull: true
     },
 
-    archivo_adjunto: {
-      type: DataTypes.STRING(500),
-      allowNull: true,
-      comment: 'URL o ruta del archivo adjunto (imágenes, PDFs, etc.)'
-    },
-
     estado_examen: {
-      type: DataTypes.ENUM('Pendiente', 'En Proceso', 'Completado', 'Cancelado'),
+      type: DataTypes.ENUM('Pendiente', 'Completado', 'Cancelado'),
       allowNull: false,
       defaultValue: 'Pendiente'
     },
