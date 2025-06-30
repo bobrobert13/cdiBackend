@@ -17,4 +17,16 @@ export const Mutation = {
     crearDiagnostico: async (parent, { input }) => {
         return await Diagnostico.create(input);
       },
+      actualizarDiagnostico: async (_, { id_diagnostico, input }) => {
+        try {
+          const diagnostico = await Diagnostico.findByPk(id_diagnostico);
+          if (!diagnostico) {
+            throw new Error('diagnostico no encontrado');
+          }
+          await diagnostico.update(input);
+          return diagnostico;
+        } catch (error) {
+          throw new UserInputError(error.message || 'Error al actualizar el diagnostico');
+        }
+      },
 };

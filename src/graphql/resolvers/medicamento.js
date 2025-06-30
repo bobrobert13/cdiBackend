@@ -34,4 +34,19 @@ export const Mutation = {
         return medicamento;
       },
 
+      actualizarEstadoMedicamento: async (_, { id_medicamento, estado_tratamiento }) => {
+        try {
+          const medicamento = await Medicamento.findByPk(id_medicamento);
+          if (!medicamento) {
+            throw new Error('medicamento no encontrado');
+          }
+          medicamento.estado_tratamiento = estado_tratamiento;
+          await medicamento.save();
+          return true;
+        } catch (error) {
+          throw new UserInputError(error.message || 'Error al actualizar el estado del medicamento');
+        }
+      },
+
+
 };

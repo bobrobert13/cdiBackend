@@ -5,6 +5,7 @@ type Consulta {
   motivo_consulta: String
   sintomas: String
   fecha_consulta: Date
+  estado_consulta: String
 notas_medicas: String
   createdAt: Date
   updatedAt: Date
@@ -17,6 +18,7 @@ input ConsultaInput {
   tipo_consulta: String!
   motivo_consulta: String!
   sintomas: String
+  estado_consulta: String
   fecha_consulta: Date
   notas_medicas: String
   fk_doctor_id: ID!
@@ -32,6 +34,8 @@ const queries = `
 
 const mutations = `
  crearConsulta(input: ConsultaInput!): Consulta!
+ actualizarConsulta(id_consulta: ID!, input: ConsultaInput!): Consulta!
+ actualizarEstadoConsulta(id_consulta: ID!, estado_consulta: String!): Boolean!
 `
 
 

@@ -63,6 +63,8 @@ const queries = `
 
 const mutations = `
 crearExamenResultado(input: ExamenesResultadosInput!): ExamenesResultados!
+actualizarEstadoExamen(id_examenes: ID!, estado_examen: EstadoExamen!): Boolean!
+actualizarExamenResultado(id_examenes: ID!, input: ExamenesResultadosInput!): ExamenesResultados!
 `
 
 export { types, queries, mutations }

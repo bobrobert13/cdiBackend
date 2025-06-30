@@ -31,6 +31,7 @@ const queries = `
 
 const mutations = `
  crearDiagnostico(input: DiagnosticoInput!): Diagnostico!
+ actualizarDiagnostico(id_diagnostico: ID!, input: DiagnosticoInput!): Diagnostico!
 `
 
 export { types, queries, mutations }

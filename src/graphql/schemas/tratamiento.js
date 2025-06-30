@@ -50,6 +50,8 @@ const queries = `
 
 const mutations = `
 crearTratamiento(input: TratamientoInput!): Tratamiento!
+actualizarTratamiento(id_tratamiento: ID!, input: TratamientoInput!): Tratamiento!
+actualizarEstadoTratamiento(id_tratamiento: ID!, estado: EstadoTratamiento!): Boolean!
 `
 
 export { types, queries, mutations }

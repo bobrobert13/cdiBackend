@@ -23,6 +23,12 @@ const Consulta = sequelize.define('Consulta', {
     allowNull: true,
   },
 
+  estado_consulta: {
+    type: DataTypes.ENUM('Activo', 'Suspendido', 'Completado'),
+    defaultValue: 'Activo',
+    allowNull: false,
+  },
+
   sintomas: {
     type: DataTypes.TEXT,
     allowNull: true

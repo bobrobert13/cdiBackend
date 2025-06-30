@@ -93,6 +93,8 @@ const queries = `
 
 const mutations = `
   crearMedicamento(input: MedicamentoInput!): Medicamento!
+  actualizarMedicamento(id_medicamento: ID!, input: MedicamentoInput!): Medicamento!
+  actualizarEstadoMedicamento(id_medicamento: ID!, estado_tratamiento: EstadoTratamientoMedicamento!): Boolean!
 `
 
 export { types, queries, mutations }
