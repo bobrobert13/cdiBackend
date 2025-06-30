@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, ENUM } = require('sequelize');
 
 module.exports = (sequelize) => {
 const Hospitalizacion = sequelize.define('Hospitalizacion', {
@@ -29,7 +29,7 @@ const Hospitalizacion = sequelize.define('Hospitalizacion', {
   },
 
   estado: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.ENUM('Activo', 'Finalizado'),
     allowNull: false,
     defaultValue: 'Activo'
   },

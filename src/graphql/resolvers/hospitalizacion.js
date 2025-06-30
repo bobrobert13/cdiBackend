@@ -17,4 +17,17 @@ export const Mutation = {
     crearHospitalizacion: async (parent, { input }) => {
         return await Hospitalizacion.create(input);
       },
+      actualizarEstadoHospitalizacion: async (_, { id_hospitalizacion, estado }) => {
+        try {
+          const hospitalizacion = await Hospitalizacion.findByPk(id_hospitalizacion);
+          if (!hospitalizacion) {
+            throw new Error('hospitalización no encontrada');
+          }
+          hospitalizacion.estado = estado;
+          await hospitalizacion.save();
+          return true;
+        } catch (error) {
+          throw new UserInputError(error.message || 'Error al actualizar el estado de la hospitalización');
+        }
+      },
 };

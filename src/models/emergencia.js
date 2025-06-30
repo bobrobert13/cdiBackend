@@ -23,6 +23,12 @@ const Emergencia = sequelize.define('Emergencia', {
     allowNull: false
   },
 
+  estado_emergencia: {
+    type: DataTypes.ENUM('Activo', 'Finalizado'),
+    allowNull: false,
+    defaultValue: 'Activo'
+  },
+
   procesamiento_realizado: {
     type: DataTypes.TEXT,
     allowNull: true

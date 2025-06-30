@@ -1,8 +1,8 @@
 const types = `
 type Hospitalizacion {
   id_hospitalizacion: ID!
-  fecha_ingreso: String!
-  fecha_egreso: String
+  fecha_ingreso: Date!
+  fecha_egreso: Date
   motivo_de_hospitalizacion: String!
   unidad_hospitalaria: String!
   estado: String!
@@ -35,6 +35,7 @@ hospitalizaciones: [Hospitalizacion!]!
 
 const mutations = `
 crearHospitalizacion(input: HospitalizacionInput!): Hospitalizacion!
+actualizarEstadoHospitalizacion(id_hospitalizacion: ID!,  : String!): Boolean!
 `
 
 export { types, queries, mutations }

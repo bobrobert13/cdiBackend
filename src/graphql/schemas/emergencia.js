@@ -5,6 +5,7 @@ type Emergencia {
   diagnostico_provisional: String
   estado_paciente: String!
   procesamiento_realizado: String
+  estado_emergencia: String
   tiempo_atencion: Int
   notas_de_atencion: String
   destino: String
@@ -21,6 +22,7 @@ input EmergenciaInput {
   estado_paciente: String!
   procesamiento_realizado: String
   tiempo_atencion: Int
+  estado_emergencia: String
   notas_de_atencion: String
   destino: String
   fk_paciente_id: ID!
@@ -36,6 +38,6 @@ const queries = `
 
 const mutations = `
 crearEmergencia(input: EmergenciaInput!): Emergencia!
+actualizarEstadoEmergencia(id_emergencia: ID!, estado_emergencia: String!): Boolean!
 `
-
 export { types, queries, mutations }

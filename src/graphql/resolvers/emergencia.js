@@ -17,4 +17,17 @@ export const Mutation = {
     crearEmergencia: async (parent, { input }) => {
         return await Emergencia.create(input);
       },
+      actualizarEstadoEmergencia: async (_, { id_emergencia, estado_emergencia }) => {
+        try {
+          const emergencia = await Emergencia.findByPk(id_emergencia);
+          if (!emergencia) {
+            throw new Error('emergencia no encontrada');
+          }
+          emergencia.estado_emergencia = estado_emergencia;
+          await emergencia.save();
+          return true;
+        } catch (error) {
+          throw new UserInputError(error.message || 'Error al actualizar el estado de la emergencia');
+        }
+      },
 };

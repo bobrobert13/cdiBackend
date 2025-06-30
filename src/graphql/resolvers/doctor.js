@@ -1,7 +1,7 @@
 import { ApolloError, UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
-import { Persona, Telefono, Correo, Direccion, Usuario, Doctor, Paciente, Consulta, Examenes, Medicamento, Tratamiento , CDI, Diagnostico } from "../../models"; 
+import { Persona, Telefono, Correo, Direccion, Usuario, Doctor, Paciente, Consulta, Examenes, Medicamento, Tratamiento , CDI, Diagnostico, Hospitalizacion, Emergencia } from "../../models"; 
 
 //input example:
 // {
@@ -98,6 +98,14 @@ export const Query = {
                       { model: Correo, as: "correo" },
                       { model: Direccion, as: "direccion" },
                     ],
+                  },
+                  {
+                    model: Hospitalizacion,
+                    as: 'hospitalizaciones',
+                  },
+                  {
+                    model: Emergencia,
+                    as: 'emergencias',
                   },
                   {
                     model: Diagnostico,

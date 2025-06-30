@@ -15,6 +15,8 @@ export const paciente = `
   medicamentos: [Medicamento]
   tratamientos: [Tratamiento]
   diagnosticos: [Diagnostico]
+  hospitalizaciones: [Hospitalizacion]
+  emergencias: [Emergencia]
 `;
 
 const types = `

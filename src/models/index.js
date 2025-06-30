@@ -258,6 +258,13 @@ Hospitalizacion.belongsTo(Paciente, {
     as: 'paciente'
 });
 
+// paciente tiene una hospitalizacion
+Paciente.hasMany(Hospitalizacion, {
+    foreignKey: 'fk_paciente_id',
+    as: 'hospitalizaciones'
+});
+
+
 // hospitalizacion tiene un doctor
 Hospitalizacion.belongsTo(Doctor, {
     foreignKey: 'fk_doctor_id',
