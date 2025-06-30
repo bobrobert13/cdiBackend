@@ -9,6 +9,7 @@ const types = `
     horario: String
     fk_persona_id: Int
     persona: Persona
+    pacientes: [Paciente]
   }
 
   input dataDoctorInput {
@@ -34,6 +35,8 @@ input ActualizarDoctorInput {
 const queries = `
   doctores: [Doctor!]!
   doctor(id_doctor: ID!): Doctor
+  doctorPacientes(id_doctor: ID!): Doctor
+  buscarDoctorPacientes(id_doctor: ID!, id_paciente: ID!): Doctor
 `;
 
 const mutations = `

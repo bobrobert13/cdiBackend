@@ -4,11 +4,12 @@ type Consulta {
   tipo_consulta: String
   motivo_consulta: String
   sintomas: String
-  notas_medicas: String
+  fecha_consulta: Date
+notas_medicas: String
   createdAt: Date
   updatedAt: Date
-  doctor: Doctor
-  cdi: CDI
+  doctores: Doctor
+  cdis: CDI
   paciente: Paciente
 }
 
@@ -16,6 +17,7 @@ input ConsultaInput {
   tipo_consulta: String!
   motivo_consulta: String!
   sintomas: String
+  fecha_consulta: Date
   notas_medicas: String
   fk_doctor_id: ID!
   fk_cdi_id: ID!

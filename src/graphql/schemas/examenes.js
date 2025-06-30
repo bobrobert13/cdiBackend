@@ -33,10 +33,11 @@ type ExamenesResultados {
   descripcion: String
   resultados: String
   estado_examen: EstadoExamen!
-  medico_solicitante: String!
+  medico_solicitante: String
   laboratorio_centro: String
   valores_referencia: String
   observaciones: String
+  doctores: Doctor
   createdAt: Date!
   updatedAt: Date!
 }

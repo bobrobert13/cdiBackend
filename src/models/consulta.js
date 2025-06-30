@@ -18,6 +18,11 @@ const Consulta = sequelize.define('Consulta', {
     allowNull: false
   },
 
+  fecha_consulta: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+
   sintomas: {
     type: DataTypes.TEXT,
     allowNull: true

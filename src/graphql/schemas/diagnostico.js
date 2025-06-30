@@ -1,10 +1,11 @@
 const types = `
 type Diagnostico {
   id_diagnostico: ID!
-  fecha_diagnostico: String!
+  fecha_diagnostico: String
   condicion: String!
   descripcion: String
   gravedad: String!
+  doctores: Doctor
   fk_doctor_id: ID!
   fk_paciente_id: ID!
   fk_cdi_id: ID!
@@ -13,7 +14,7 @@ type Diagnostico {
 }
 
 input DiagnosticoInput {
-  fecha_diagnostico: Date!
+  fecha_diagnostico: Date
   condicion: String!
   descripcion: String
   gravedad: String

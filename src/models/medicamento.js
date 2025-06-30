@@ -78,27 +78,27 @@ const Medicamento = sequelize.define('Medicamento', {
 
   medico_prescriptor: {
     type: DataTypes.STRING(100),
-    allowNull: false
+    allowNull: true
   },
 
   estado_tratamiento: {
-    type: DataTypes.ENUM('Activo', 'Suspendido', 'Completado', 'Cancelado'),
+    type: DataTypes.ENUM('Activo', 'Suspendido', 'Completado'),
     allowNull: false,
     defaultValue: 'Activo'
   },
 
   tipo_medicamento: {
     type: DataTypes.ENUM(
-      'Antibiótico',
-      'Analgésico',
+      'Antibiotico',
+      'Analgesico',
       'Antiinflamatorio',
       'Antihipertensivo',
-      'Antidiabético',
+      'Antidiabetico',
       'Anticoagulante',
       'Vitamina',
       'Suplemento',
       'Hormonal',
-      'Psiquiátrico',
+      'Psiquiatrico',
       'Cardiovascular',
       'Respiratorio',
       'Digestivo',

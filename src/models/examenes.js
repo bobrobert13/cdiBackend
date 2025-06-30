@@ -56,7 +56,7 @@ module.exports = (sequelize) => {
 
     medico_solicitante: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     },
 
     laboratorio_centro: {

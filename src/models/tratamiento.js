@@ -17,23 +17,17 @@ module.exports = (sequelize) => {
       }
     },
     fecha_inicio: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
-      validate: {
-        notEmpty: true,
-        isDate: true
-      }
     },
     fecha_culminacion: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: true,
-      validate: {
-        isDate: true
-      }
     },
     estado: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.ENUM('Activo', 'Suspendido', 'Finalizado'),
       allowNull: false,
+      defaultValue: 'Activo',
       validate: {
         notEmpty: true,
         len: [2, 50]

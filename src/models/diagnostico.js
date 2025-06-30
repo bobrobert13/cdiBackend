@@ -10,7 +10,7 @@ const Diagnostico = sequelize.define('Diagnostico', {
 
   fecha_diagnostico: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: true
   },
 
   condicion: {

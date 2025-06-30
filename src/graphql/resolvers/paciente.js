@@ -2,7 +2,6 @@ import { UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
 // Asume que tienes un modelo Usuario de Sequelize importado:
-import { Paciente, Persona, Telefono, Correo, Direccion } from "../../models";
 
 // input create example:
 // {
@@ -66,43 +65,134 @@ import { Paciente, Persona, Telefono, Correo, Direccion } from "../../models";
 //     }
 //   }
 // }
+import { Paciente, Persona, Telefono, Correo, Direccion, Diagnostico, CDI, Doctor, Consulta, Examenes, Medicamento, Tratamiento } from "../../models";
 
 
 
 export const Query = {
   // Obtener todos los pacientes
   pacientes: async () => {
-    return await Paciente.findAll({
-      include: [
+
+    try {
+      const pacientes = await Paciente.findAll(
         {
-          model: Persona,
-          as: "persona",
-          include: [
-            { model: Telefono, as: "telefono" },
-            { model: Correo, as: "correo" },
-            { model: Direccion, as: "direccion" },
-          ],
-        },
-      ],
-    });
+        include: [
+          {
+            model: Persona,
+            as: "persona",
+            include: [
+              { model: Telefono, as: "telefono" },
+              { model: Correo, as: "correo" },
+              { model: Direccion, as: "direccion" },
+            ],
+          },
+          {
+            model: Diagnostico,
+            as: "diagnosticos",
+            include: [
+              {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+            ]
+          },
+          {
+            model: Consulta,
+            as: "consultas",
+            include: [
+              {model: CDI, as: 'cdis' },
+              {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+            ]
+          },
+          {
+            model: Examenes,
+            as: "examenes",
+            include: [
+               {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+            ]
+          },
+          {
+            model: Medicamento,
+            as: "medicamentos",
+            include: [
+               {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+            ]
+          },
+          {
+            model: Tratamiento,
+            as: "tratamientos",
+            include: [
+               {model: Doctor, as: 'doctor', include: [{model: Persona, as: 'persona' }] },
+            ]
+          },
+        ],
+      }
+    );
+      console.log('datos de paciente: ', pacientes);
+      return pacientes;
+
+    } catch (error) {
+      console.error("Error al obtener pacientes:", error);
+      throw new UserInputError(error.message);
+    }
+
   },
   // Obtener un paciente por ID
   paciente: async (parent, { id_paciente }) => {
-    const paciente = await Paciente.findByPk(id_paciente, {
-      include: [
+    try {
+      const paciente = await Paciente.findByPk(id_paciente, 
         {
-          model: Persona,
-          as: "persona",
           include: [
-            { model: Telefono, as: "telefono" },
-            { model: Correo, as: "correo" },
-            { model: Direccion, as: "direccion" },
+            {
+              model: Persona,
+              as: "persona",
+              include: [
+                { model: Telefono, as: "telefono" },
+                { model: Correo, as: "correo" },
+                { model: Direccion, as: "direccion" },
+              ],
+            },
+            {
+              model: Diagnostico,
+              as: "diagnosticos",
+              include: [
+                {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+              ]
+            },
+            {
+              model: Consulta,
+              as: "consultas",
+              include: [
+                {model: CDI, as: 'cdis' },
+                {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+              ]
+            },
+            {
+              model: Examenes,
+              as: "examenes",
+              include: [
+                 {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+              ]
+            },
+            {
+              model: Medicamento,
+              as: "medicamentos",
+              include: [
+                 {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+              ]
+            },
+            {
+              model: Tratamiento,
+              as: "tratamientos",
+              include: [
+                 {model: Doctor, as: 'doctor', include: [{model: Persona, as: 'persona' }] },
+              ]
+            },
           ],
-        },
-      ],
-    });
-    if (!paciente) throw new UserInputError("Paciente no encontrado");
-    return paciente;
+        }
+    );
+      if (!paciente) throw new UserInputError("Paciente no encontrado");
+      return paciente;
+    } catch (error) {
+      throw new UserInputError(error.message);
+    }
   },
 };
 

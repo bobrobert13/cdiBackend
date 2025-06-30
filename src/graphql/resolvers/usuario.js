@@ -71,8 +71,7 @@ export const Mutation = {
         try {
             const { nombre_usuario, contrasena } = input;
             const usuario = await Usuario.findOne({ where: { nombre_usuario }, attributes: ['id_usuario', 'fk_doctor_id', 'fk_cdi_id', 'nombre_usuario', 'rol' , 'estado', 'fecha_creacion']  });
-
-            if (!usuario) throw new UserInputError("Usuario no encontrado");
+            if (!usuario) throw new UserInputError("Usuario o contraseña incorrectos");
             if (usuario.estado !== "activo") {
                 throw new UserInputError("Usuario inactivo o suspendido");
               }
@@ -80,7 +79,6 @@ export const Mutation = {
             // const valid = await passwordMatch(password, usuario.password);
             // if (!valid) throw new UserInputError("Contraseña incorrecta");
             const token = createToken(usuario.get());
-            
             return token
         } catch (error) {
             throw new UserInputError(error.message);

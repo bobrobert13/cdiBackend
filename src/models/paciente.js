@@ -48,7 +48,14 @@ const Paciente = sequelize.define('Paciente', {
       model: 'personas',
       key: 'id_persona'
     }
-  } 
+  },
+  fk_doctor_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'doctores',
+      key: 'id_doctor'
+    }
+  }
 }, {
   tableName: 'pacientes',
   timestamps: true

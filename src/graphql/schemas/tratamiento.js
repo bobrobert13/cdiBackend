@@ -15,8 +15,6 @@ enum EstadoTratamiento {
   Activo
   Suspendido
   Finalizado
-  Pendiente
-  Cancelado
 }
 
 
@@ -27,6 +25,7 @@ type Tratamiento {
   fecha_culminacion: Date
   estado: EstadoTratamiento!
   detalles: String
+  doctor: Doctor
   fk_doctor_id: ID!
   fk_paciente_id: ID!
   createdAt: Date!

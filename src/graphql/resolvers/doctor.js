@@ -1,7 +1,7 @@
 import { ApolloError, UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
-import { Persona, Telefono, Correo, Direccion, Usuario, Doctor } from "../../models"; 
+import { Persona, Telefono, Correo, Direccion, Usuario, Doctor, Paciente, Consulta, Examenes, Medicamento, Tratamiento , CDI, Diagnostico } from "../../models"; 
 
 //input example:
 // {
@@ -82,6 +82,81 @@ export const Query = {
           include: [{ model: Persona, as: "persona" }]
         });
       },
+
+      doctorPacientes: async (parent, { id_doctor }) => {
+        try {
+          const doctor = await Doctor.findByPk(id_doctor, {
+            include: [
+              { 
+                model: Paciente, as: "pacientes",
+                include: [
+                  {
+                    model: Persona,
+                    as: "persona",
+                    include: [
+                      { model: Telefono, as: "telefono" },
+                      { model: Correo, as: "correo" },
+                      { model: Direccion, as: "direccion" },
+                    ],
+                  },
+                  {
+                    model: Diagnostico,
+                    as: "diagnosticos",
+                    include: [
+                      {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+                    ],
+                    order: [['createdAt', 'DESC']]
+                  },
+                  {
+                    model: Consulta,
+                    as: "consultas",
+                    include: [
+                      {model: CDI, as: 'cdis' },
+                      {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+                    ]
+                  },
+                  {
+                    model: Examenes,
+                    as: "examenes",
+                    include: [
+                       {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+                    ]
+                  },
+                  {
+                    model: Medicamento,
+                    as: "medicamentos",
+                    include: [
+                       {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+                    ]
+                  },
+                  {
+                    model: Tratamiento,
+                    as: "tratamientos",
+                    include: [
+                       {model: Doctor, as: 'doctor', include: [{model: Persona, as: 'persona' }] },
+                    ]
+                  },
+                ]
+              },
+              {model: Persona, as: 'persona',
+                include: [
+                  {model: Telefono, as: 'telefono'},
+                  {model: Correo, as: 'correo'},
+                  {model: Direccion, as: 'direccion'},
+                ]
+              }
+            ]
+          });
+          if (!doctor) throw new UserInputError("Doctor no encontrado");
+          console.log('doctor', doctor);
+          
+          return doctor;
+        } catch (error) {
+          console.error("Error al obtener pacientes del doctor:", error);
+          throw new UserInputError(error.message);
+        }
+      },
+
   
       doctor: async (parent, { id_doctor }) => {
         const doctor = await Doctor.findByPk(id_doctor, {

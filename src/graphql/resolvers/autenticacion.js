@@ -21,7 +21,7 @@ export const Mutation = {
           console.log('usuario:', usuario);
           
           if (!usuario) {
-            console.log('usuario no encontradoo');
+            console.log(`El usuario ${nombre_usuario} no existe`);
             throw new UserInputError("Usuario o contraseña incorrectos");
           }
     

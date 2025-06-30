@@ -160,6 +160,14 @@ Doctor.hasMany(Consulta, {
     as: 'consultas'
 });
 
+//Doctor tiene pacientes
+Doctor.hasMany(Paciente, {
+    foreignKey: 'fk_doctor_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    as: 'pacientes'
+});
+
 
 CDI.hasMany(Consulta, {
     foreignKey: 'fk_cdi_id',

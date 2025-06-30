@@ -19,7 +19,6 @@ enum EstadoTratamientoMedicamento {
   Activo
   Suspendido
   Completado
-  Cancelado
 }
 
 enum TipoMedicamento {
@@ -51,11 +50,12 @@ type Medicamento {
   laboratorio: String
   fecha_inicio: Date
   fecha_fin: Date
-  medico_prescriptor: String!
+  medico_prescriptor: String
   estado_tratamiento: EstadoTratamientoMedicamento!
   tipo_medicamento: TipoMedicamento
   contraindicaciones: String
   efectos_secundarios: String
+  doctores: Doctor
   fk_doctor_id: ID!
   fk_paciente_id: ID!
   createdAt: Date!
@@ -73,7 +73,7 @@ input MedicamentoInput {
   laboratorio: String
   fecha_inicio: Date
   fecha_fin: Date
-  medico_prescriptor: String!
+  medico_prescriptor: String
   estado_tratamiento: EstadoTratamientoMedicamento!
   tipo_medicamento: TipoMedicamento
   contraindicaciones: String

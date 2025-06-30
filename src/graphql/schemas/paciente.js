@@ -10,6 +10,11 @@ export const paciente = `
   tipo_de_sangre: String
   alergias: String
   persona: Persona!
+  consultas: [Consulta]
+  examenes: [ExamenesResultados]
+  medicamentos: [Medicamento]
+  tratamientos: [Tratamiento]
+  diagnosticos: [Diagnostico]
 `;
 
 const types = `
@@ -25,6 +30,7 @@ const types = `
     antecedentes_familiares: String
     tipo_de_sangre: String
     alergias: String
+    fk_doctor_id: ID!
     personaInput: CrearPersonaInput!
   }
 
