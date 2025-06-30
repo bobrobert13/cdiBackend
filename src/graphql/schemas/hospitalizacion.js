@@ -35,7 +35,7 @@ hospitalizaciones: [Hospitalizacion!]!
 
 const mutations = `
 crearHospitalizacion(input: HospitalizacionInput!): Hospitalizacion!
-actualizarEstadoHospitalizacion(id_hospitalizacion: ID!,  : String!): Boolean!
+actualizarEstadoHospitalizacion(id_hospitalizacion: ID!, estado: String!): Boolean!
 `
 
 export { types, queries, mutations }
