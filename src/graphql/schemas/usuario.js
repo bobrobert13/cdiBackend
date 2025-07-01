@@ -7,9 +7,9 @@ const types = `
     fecha_creacion: String!
     estado: EstadoUsuario!
     contrasena: String
-    fk_doctor_id: Int
-    fk_cdi_id: Int
-    fk_seguridad_id: Int
+    fk_doctor_id: ID
+    fk_cdi_id: ID
+    fk_seguridad_id: ID
   }
 
   enum EstadoUsuario {
@@ -23,9 +23,9 @@ const types = `
     nombre_usuario: String!
     contrasena: String
     estado: EstadoUsuario
-    fk_doctor_id: Int
-    fk_cdi_id: Int
-    fk_seguridad_id: Int
+    fk_doctor_id: ID
+    fk_cdi_id: ID
+    fk_seguridad_id: ID
   }
 
   input ActualizarUsuarioInput {
@@ -33,7 +33,7 @@ const types = `
     nombre_usuario: String
     contrasena: String
     estado: EstadoUsuario
-    fk_seguridad_id: Int
+    fk_seguridad_id: ID
   }
 `;
 

@@ -72,7 +72,6 @@ import { Paciente, Persona, Telefono, Correo, Direccion, Diagnostico, CDI, Docto
 export const Query = {
   // Obtener todos los pacientes
   pacientes: async () => {
-
     try {
       const pacientes = await Paciente.findAll(
         {
@@ -125,9 +124,7 @@ export const Query = {
         ],
       }
     );
-      console.log('datos de paciente: ', pacientes);
       return pacientes;
-
     } catch (error) {
       console.error("Error al obtener pacientes:", error);
       throw new UserInputError(error.message);

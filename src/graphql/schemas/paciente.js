@@ -17,6 +17,8 @@ export const paciente = `
   diagnosticos: [Diagnostico]
   hospitalizaciones: [Hospitalizacion]
   emergencias: [Emergencia]
+  createdAt: Date
+  updatedAt: Date
 `;
 
 const types = `

@@ -63,6 +63,26 @@ CDI.hasMany(Persona, {
     as: 'personas'
 });
 
+CDI.hasMany(Paciente, {
+    foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
+    as: 'pacientes'
+});
+
+Paciente.belongsTo(CDI, {
+    foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
+    as: 'cdi'
+});
+
+CDI.hasMany(Doctor, {
+    foreignKey: 'fk_cdi_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    as: 'doctores'
+});
+
+
 //relacion entre el usuario y el rol
 Usuario.belongsTo(Role, {
     foreignKey: 'fk_role_id',
@@ -82,9 +102,10 @@ Usuario.belongsTo(Doctor, {
     as: 'doctores'
 });
 
-Doctor.hasMany(Usuario, {
+Doctor.hasOne(Usuario, {
     foreignKey: 'fk_doctor_id',
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
     as: 'usuarios'
 });
 
@@ -107,9 +128,10 @@ Usuario.belongsTo(CDI, {
     as: 'cdi'
 });
 
-CDI.hasMany(Usuario, {
+CDI.hasOne(Usuario, {
     foreignKey: 'fk_cdi_id',
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
     as: 'usuarios'
 });
 

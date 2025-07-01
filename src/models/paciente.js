@@ -55,6 +55,13 @@ const Paciente = sequelize.define('Paciente', {
       model: 'doctores',
       key: 'id_doctor'
     }
+  },
+  fk_cdi_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'cdis',
+      key: 'id_cdi'
+    }
   }
 }, {
   tableName: 'pacientes',

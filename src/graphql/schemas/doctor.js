@@ -7,9 +7,11 @@ const types = `
     numero_carnet: String!
     area_de_trabajo: String!
     horario: String
-    fk_persona_id: Int
+    fk_persona_id: ID
+    fk_cdi_id: ID
     persona: Persona
     pacientes: [Paciente]
+    usuarios: Usuario
   }
 
   input dataDoctorInput {
@@ -17,6 +19,7 @@ const types = `
   numero_carnet: String!
   area_de_trabajo: String!
   horario: String
+  fk_cdi_id: ID!
   }
 
 input CrearDoctorInput {
@@ -33,7 +36,7 @@ input ActualizarDoctorInput {
 `;
 
 const queries = `
-  doctores: [Doctor!]!
+  doctores: [Doctor!]
   doctor(id_doctor: ID!): Doctor
   doctorPacientes(id_doctor: ID!): Doctor
   buscarDoctorPacientes(id_doctor: ID!, id_paciente: ID!): Doctor

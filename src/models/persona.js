@@ -30,7 +30,7 @@ const Persona = sequelize.define('Persona', {
 
   sexo: {
     type: DataTypes.STRING(10),
-    allowNull: false
+    allowNull: true
   },
 
   edad: {

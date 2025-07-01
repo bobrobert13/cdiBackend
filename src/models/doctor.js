@@ -34,7 +34,14 @@ const Doctor = sequelize.define('Doctor', {
       model: 'personas',
       key: 'id_persona'
     }
-  } 
+  } ,
+  fk_cdi_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'cdis',
+      key: 'id_cdi'
+    }
+  }
 }, {
   tableName: 'doctores',
   timestamps: true

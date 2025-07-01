@@ -1,7 +1,7 @@
 import { ApolloError, UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
-import { Persona, Telefono, Correo, Direccion, Usuario, Doctor, Paciente, Consulta, Examenes, Medicamento, Tratamiento , CDI, Diagnostico, Hospitalizacion, Emergencia } from "../../models"; 
+import { Persona, Telefono, Correo, Direccion, Usuario, Doctor, Paciente, Consulta, Examenes, Medicamento, Tratamiento, CDI, Diagnostico, Hospitalizacion, Emergencia } from "../../models";
 
 //input example:
 // {
@@ -77,107 +77,123 @@ import { Persona, Telefono, Correo, Direccion, Usuario, Doctor, Paciente, Consul
 
 export const Query = {
 
-    doctores: async () => {
-        return await Doctor.findAll({
-          include: [{ model: Persona, as: "persona" }]
-        });
-      },
+  doctores: async () => {
+    const todosDoctores = await Doctor.findAll({
+      include: [{ model: Persona, as: "persona" }, { model: Usuario, as: "usuarios" }]
+    });
+    console.log('TODOS DOCTORES:', todosDoctores);
+    return todosDoctores;
+  },
 
-      doctorPacientes: async (parent, { id_doctor }) => {
-        try {
-          const doctor = await Doctor.findByPk(id_doctor, {
+  doctorPacientes: async (parent, { id_doctor }) => {
+    try {
+      const doctor = await Doctor.findByPk(id_doctor, {
+        include: [
+          {
+            model: Usuario, as: 'usuarios',
+          },
+          {
+            model: Paciente, as: "pacientes",
             include: [
-              { 
-                model: Paciente, as: "pacientes",
+
+              {
+                model: Persona,
+                as: "persona",
                 include: [
-                  {
-                    model: Persona,
-                    as: "persona",
-                    include: [
-                      { model: Telefono, as: "telefono" },
-                      { model: Correo, as: "correo" },
-                      { model: Direccion, as: "direccion" },
-                    ],
-                  },
-                  {
-                    model: Hospitalizacion,
-                    as: 'hospitalizaciones',
-                  },
-                  {
-                    model: Emergencia,
-                    as: 'emergencias',
-                  },
-                  {
-                    model: Diagnostico,
-                    as: "diagnosticos",
-                    include: [
-                      {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
-                    ],
-                    order: [['createdAt', 'DESC']]
-                  },
-                  {
-                    model: Consulta,
-                    as: "consultas",
-                    include: [
-                      {model: CDI, as: 'cdis' },
-                      {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
-                    ]
-                  },
-                  {
-                    model: Examenes,
-                    as: "examenes",
-                    include: [
-                       {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
-                    ]
-                  },
-                  {
-                    model: Medicamento,
-                    as: "medicamentos",
-                    include: [
-                       {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
-                    ]
-                  },
-                  {
-                    model: Tratamiento,
-                    as: "tratamientos",
-                    include: [
-                       {model: Doctor, as: 'doctor', include: [{model: Persona, as: 'persona' }] },
-                    ]
-                  },
+                  { model: Telefono, as: "telefono" },
+                  { model: Correo, as: "correo" },
+                  { model: Direccion, as: "direccion" },
+                ],
+              },
+              {
+                model: Hospitalizacion,
+                as: 'hospitalizaciones',
+              },
+              {
+                model: Emergencia,
+                as: 'emergencias',
+              },
+              {
+                model: Diagnostico,
+                as: "diagnosticos",
+                include: [
+                  { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+                ],
+                order: [['createdAt', 'DESC']]
+              },
+              {
+                model: Consulta,
+                as: "consultas",
+                include: [
+                  { model: CDI, as: 'cdis' },
+                  { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
                 ]
               },
-              {model: Persona, as: 'persona',
+              {
+                model: Examenes,
+                as: "examenes",
                 include: [
-                  {model: Telefono, as: 'telefono'},
-                  {model: Correo, as: 'correo'},
-                  {model: Direccion, as: 'direccion'},
+                  { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
                 ]
-              }
+              },
+              {
+                model: Medicamento,
+                as: "medicamentos",
+                include: [
+                  { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+                ]
+              },
+              {
+                model: Tratamiento,
+                as: "tratamientos",
+                include: [
+                  { model: Doctor, as: 'doctor', include: [{ model: Persona, as: 'persona' }] },
+                ]
+              },
             ]
-          });
-          if (!doctor) throw new UserInputError("Doctor no encontrado");
-          console.log('doctor', doctor);
-          
-          return doctor;
-        } catch (error) {
-          console.error("Error al obtener pacientes del doctor:", error);
-          throw new UserInputError(error.message);
-        }
-      },
+          },
+          {
+            model: Persona, as: 'persona',
+            include: [
+              { model: Telefono, as: 'telefono' },
+              { model: Correo, as: 'correo' },
+              { model: Direccion, as: 'direccion' },
+            ]
+          }
+        ]
+      });
+      if (!doctor) throw new UserInputError("Doctor no encontrado");
+      return doctor;
+    } catch (error) {
+      console.error("Error al obtener pacientes del doctor:", error);
+      throw new UserInputError(error.message);
+    }
+  },
 
-  
-      doctor: async (parent, { id_doctor }) => {
-        const doctor = await Doctor.findByPk(id_doctor, {
-          include: [{ model: Persona, as: "persona" }]
-        });
-        if (!doctor) throw new UserInputError("Doctor no encontrado");
-        return doctor;
-      },
+
+  doctor: async (parent, { id_doctor }) => {
+    const doctor = await Doctor.findByPk(id_doctor, {
+      include: [{ model: Persona, as: "persona" }]
+    });
+    if (!doctor) throw new UserInputError("Doctor no encontrado");
+    return doctor;
+  },
 };
 
 export const Mutation = {
   crearDoctor: async (parent, { input }) => {
+    try {
       const { personaInput, usuarioInput, doctorInput } = input;
+
+      if (usuarioInput) {
+        const usuario = await Usuario.findOne({
+          where: {
+            nombre_usuario: usuarioInput.nombre_usuario
+          }
+        });
+        if (usuario) throw new UserInputError("El nombre de usuario ya existe");
+      }
+
 
       // Crear teléfono, correo y dirección si vienen
       let telefono = null, correo = null, direccion = null;
@@ -190,7 +206,7 @@ export const Mutation = {
       if (personaInput.direccionInput) {
         direccion = await Direccion.create(personaInput.direccionInput);
       }
-  
+
       // Crear persona
       const personaData = {
         ...personaInput,
@@ -202,21 +218,21 @@ export const Mutation = {
       delete personaData.telefonoInput;
       delete personaData.correoInput;
       delete personaData.direccionInput;
-  
+
       const persona = await Persona.create(personaData);
-  
+
       // Crear doctor asociado a persona
       const doctor = await Doctor.create({
         ...doctorInput,
         fk_persona_id: persona.id_persona,
       });
-  
+
       const usuario = await Usuario.create({
         ...usuarioInput,
         fk_doctor_id: doctor.id_doctor,
-        fk_cdi_id: personaInput.fk_cdi_id,
+        fk_cdi_id: doctorInput.fk_cdi_id,
       });
-  
+
       // Retornar doctor con relaciones anidadas
       const doctorResults = await Doctor.findByPk(doctor.id_doctor, {
         include: [
@@ -240,8 +256,12 @@ export const Mutation = {
           direccion: doctorResults.get().persona.get().direccion.get(),
         }
       };
-    },
-  
+    } catch (error) {
+      console.error("Error al crear el doctor:", error);
+      throw new UserInputError(error.message);
+    }
+  },
+
   actualizarDoctor: async (parent, { id_doctor, input }) => {
     // 1. Buscar el doctor existente
     const doctor = await Doctor.findByPk(id_doctor, {
@@ -291,7 +311,7 @@ export const Mutation = {
       if (personaInput.correoInput) {
         if (correoActual.correo) {
           await Correo.update(personaInput.correoInput, { where: { id_correo: correoActual.id_correo } });
-        } 
+        }
         else {
           const nuevoCorreo = await Correo.create(personaInput.correoInput);
           await Persona.update({ fk_correo_id: nuevoCorreo.id_correo }, { where: { id_persona: persona.id_persona } });
@@ -318,7 +338,7 @@ export const Mutation = {
     }
 
     // SI VIENE usuarioInput, actualizar el usuario:
-    if(input.usuarioInput){
+    if (input.usuarioInput) {
       const usuarioInput = input.usuarioInput;
       const usuario = await Usuario.findOne({
         where: {
@@ -334,7 +354,7 @@ export const Mutation = {
     }
 
     // 4. Retornar doctor actualizado con todas las relaciones
-   const doctorActualizado = await Doctor.findByPk(doctor.id_doctor, {
+    const doctorActualizado = await Doctor.findByPk(doctor.id_doctor, {
       include: [
         {
           model: Persona,
@@ -356,7 +376,7 @@ export const Mutation = {
         direccion: doctorActualizado.get().persona.get().direccion.get(),
       }
     });
-    
+
     return {
       ...doctorActualizado.get(),
       persona: {
@@ -371,28 +391,28 @@ export const Mutation = {
   inhabilitarDoctor: async (parent, { id_doctor, estado }) => {
     try {
       const doctor = await Doctor.findByPk(id_doctor);
-      
+
       if (!doctor) {
         throw new Error('Doctor no encontrado');
       }
-  
+
       const [updated] = await Usuario.update(
         { estado: estado },
         { where: { fk_doctor_id: doctor.id_doctor } }
       );
-  
+
       if (updated === 0) {
         throw new Error('No se encontró ningún usuario asociado para inhabilitar');
       }
-  
+
       return true;
     } catch (error) {
       console.error('Error inhabilitando al doctor:', error);
       throw new Error('Error al inhabilitar al doctor');
     }
   },
-  
-  
+
+
   eliminarDoctor: async (parent, { id_doctor }) => {
     // Buscar el doctor con todas las relaciones anidadas
     const doctor = await Doctor.findByPk(id_doctor, {

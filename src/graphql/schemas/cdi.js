@@ -6,7 +6,7 @@ const types = `
     nombre: String!
     encargado: String
     cuadrante: String
-    usuario: Usuario
+    usuarios: Usuario
   }
 
   input CrearCDIInput {
@@ -29,6 +29,8 @@ const types = `
 const queries = `
   cdis: [CDI!]!
   cdi(id_cdi: ID!): CDI
+  doctoresCDI(id_cdi: ID!): [Doctor!]!
+  pacientesCDI(id_cdi: ID!): [Paciente!]!
 `;
 
 const mutations = `
