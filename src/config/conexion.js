@@ -101,7 +101,7 @@ const dataBaseConnect = async () => {
       // Sincronizar modelos (crear tablas)
       await sequelize.sync({ 
         force: false, // true = elimina y recrea tablas
-        alter: false   // true = modifica tablas existentes
+        alter: true   // true = modifica tablas existentes
       }).then(() => {
         // crearUsuariosDePrueba({ Usuario, CDI, Persona })
       })
