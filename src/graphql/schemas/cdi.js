@@ -6,6 +6,7 @@ const types = `
     nombre: String!
     encargado: String
     cuadrante: String
+    estado: String
     usuarios: Usuario
   }
 
@@ -26,8 +27,10 @@ const types = `
   }
 `;
 
-const queries = `
+const queries = ` 
   cdis: [CDI!]!
+  cdiInfo(id_cdi: ID!): CDI
+  todosCdis: [CDI!]!
   cdi(id_cdi: ID!): CDI
   doctoresCDI(id_cdi: ID!): [Doctor!]!
   pacientesCDI(id_cdi: ID!): [Paciente!]!

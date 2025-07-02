@@ -35,22 +35,6 @@ const Usuario = sequelize.define('Usuario', {
     defaultValue: 'activo'
   },
 
-  foto_de_perfil: {
-    type: DataTypes.STRING(500),
-    allowNull: true
-  },
-
-  codigo_qr: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  fk_role_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'roles',
-      key: 'id_role'
-    }
-  },
   fk_doctor_id: {
     type: DataTypes.INTEGER,
     references: {
@@ -65,13 +49,21 @@ const Usuario = sequelize.define('Usuario', {
       key: 'id_cdi'
     }
   },
-  fk_seguridad_id: {
+  id_pregunta: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'seguridad',
-      key: 'id_seguridad'
+      model: 'preguntas_seguridad',
+      key: 'id_pregunta'
     }
   },
+    id_pin: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'pins_recuperacion',
+      key: 'id_pin'
+    }
+  },
+
 }, {
   tableName: 'usuarios',
   timestamps: true

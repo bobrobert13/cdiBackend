@@ -13,21 +13,6 @@ const Persona = sequelize.define('Persona', {
     allowNull: false
   },
 
-  nombre2: {
-    type: DataTypes.STRING(50),
-    allowNull: true
-  },
-
-  apellido1: {
-    type: DataTypes.STRING(50),
-    allowNull: true
-  },
-
-  apellido2: {
-    type: DataTypes.STRING(50),
-    allowNull: true
-  },
-
   sexo: {
     type: DataTypes.STRING(10),
     allowNull: true

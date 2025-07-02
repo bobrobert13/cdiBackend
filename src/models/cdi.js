@@ -33,6 +33,12 @@ const CDI = sequelize.define('CDI', {
     }
   },
 
+  estado: {
+    type: DataTypes.ENUM('activo', 'inactivo'),
+    allowNull: false,
+    defaultValue: 'activo'
+  },
+
   cuadrante: {
     type: DataTypes.STRING(100),
     allowNull: true,

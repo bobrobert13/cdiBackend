@@ -1,20 +1,39 @@
 import { UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
+import { Op, or } from "sequelize";
 
 import { Usuario, CDI, Doctor, Persona, Paciente, Telefono, Correo, Direccion } from "../../models";
+import { createPassword } from "../../utils/password";
 
 
 export const Query = {
 
   cdis: async () => {
     try {
-      const todosCDI = await CDI.findAll({ include: [{ model: Usuario, as: 'usuarios' }] });
+      const todosCDI = await CDI.findAll({ include: [{ model: Usuario, as: 'usuarios' }], order: [['createdAt', 'DESC']] });
       return todosCDI;
     } catch (error) {
       console.error('Error al obtener los CDI:', error);
       throw new UserInputError(error.message);
     }
   },
+
+  cdiInfo: async (parent, { id_cdi }) => {
+    const cdi = await CDI.findByPk(id_cdi);
+    if (!cdi) throw new UserInputError("CDI no encontrado");
+    return cdi;
+  },
+
+  todosCdis: async () => {
+    try {
+      const todosCDI = await CDI.findAll();
+      return todosCDI;
+    } catch (error) {
+      console.error('Error al obtener los CDI:', error);
+      throw new UserInputError(error.message);
+    }
+  },
+
 
   cdi: async (parent, { id_cdi }) => {
     const cdi = await CDI.findByPk(id_cdi, { include: [{ model: Usuario, as: 'usuarios' }] });
@@ -49,16 +68,23 @@ export const Mutation = {
     try {
       const { usuarioInput, ...cdiInput } = input;
 
+      const { numero_cdi, nombre } = cdiInput;
       const cdiExistente = await CDI.findOne({
-        where: { numero_cdi: cdiInput.numero_cdi }
+        where: {
+          [Op.or]: [
+            { numero_cdi },
+            { nombre }
+          ]
+        }
       });
       if (cdiExistente) {
-        throw new UserInputError("Ya existe un CDI con ese número");
+        throw new UserInputError("Ya existe un CDI con ese código o nombre");
       }
 
       const usuarioExistente = await Usuario.findOne({
         where: { nombre_usuario: usuarioInput.nombre_usuario }
       });
+
       if (usuarioExistente) {
         throw new UserInputError("Ya existe un usuario con ese nombre de usuario");
       }
@@ -70,7 +96,7 @@ export const Mutation = {
         nombre_usuario: usuarioInput.nombre_usuario,
         estado: "activo",
         fk_cdi_id: nuevoCDI.id_cdi,
-        contrasena: usuarioInput.contrasena
+        contrasena: await createPassword(usuarioInput.contrasena)
       });
 
       return {
@@ -137,6 +163,12 @@ export const Mutation = {
       if (!cdi) {
         throw new Error('CDI no encontrado');
       }
+      console.log("datos para actualizar", id_cdi, estado);
+      
+      await CDI.update(
+        { estado: estado },
+        { where: { id_cdi: id_cdi } }
+      );
 
       const [updated] = await Usuario.update(
         { estado: estado },

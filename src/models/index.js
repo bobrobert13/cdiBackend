@@ -20,6 +20,7 @@ const ImagenesMedicas = require('./imagenes_medicas')(sequelize);
 const Medicamento = require('./medicamento')(sequelize);
 const Persona = require('./persona')(sequelize);
 const Seguridad = require('./seguridad')(sequelize);
+const Pin = require('./pin')(sequelize);
 const Telefono = require('./telefono')(sequelize);
 const Usuario = require('./usuario')(sequelize);
 const Role = require('./role')(sequelize);
@@ -28,6 +29,7 @@ const Role = require('./role')(sequelize);
 // Relación entre Persona y Doctor
 Doctor.belongsTo(Persona, {
     foreignKey: 'fk_persona_id',
+    onDelete: 'CASCADE',
     as: 'persona'
 });
 
@@ -83,18 +85,6 @@ CDI.hasMany(Doctor, {
 });
 
 
-//relacion entre el usuario y el rol
-Usuario.belongsTo(Role, {
-    foreignKey: 'fk_role_id',
-    as: 'role'
-});
-
-Role.hasMany(Usuario, {
-    foreignKey: 'fk_role_id',
-    onDelete: 'CASCADE',
-    as: 'usuarios',
-});
-
 
 // RELACION ENTRE EL DOCTOR Y EL USUARIO
 Usuario.belongsTo(Doctor, {
@@ -110,16 +100,30 @@ Doctor.hasOne(Usuario, {
 });
 
 // RELACION CON EL USUARIO Y LA SEGURIDAD
-Usuario.belongsTo(Seguridad, {
-    foreignKey: 'fk_seguridad_id',
-    as: 'seguridad'
+Usuario.hasOne(Seguridad, {
+    foreignKey: 'fk_usuario_id',
+    onDelete: 'CASCADE',
+    as: 'preguntas_seguridad'
 });
 
-Seguridad.hasMany(Usuario, {
-    foreignKey: 'fk_seguridad_id',
+Seguridad.belongsTo(Usuario, {
+    foreignKey: 'fk_usuario_id',
     onDelete: 'CASCADE',
     as: 'usuarios'
 });
+
+Usuario.hasOne(Pin, {
+    foreignKey: 'fk_usuario_id',
+    onDelete: 'CASCADE',
+    as: 'pin'
+});
+
+Pin.belongsTo(Usuario, {
+    foreignKey: 'fk_usuario_id',
+    onDelete: 'CASCADE',
+    as: 'usuarios'
+});
+
 
 
 // RELACION ENTRE EL CDI Y EL USUARIO
@@ -471,4 +475,5 @@ module.exports = {
     ImagenesMedicas,
     Medicamento,
     Seguridad,
+    Pin,
 }

@@ -198,7 +198,31 @@ export const Mutation = {
   crearPaciente: async (parent, { input }) => {
     try {
       const { personaInput, ...pacienteInput } = input;
-    
+
+      
+        if (personaInput.telefonoInput) {
+        telefono = await Telefono.findOne(personaInput.telefonoInput);
+        if (telefono) {
+          throw new UserInputError("Ya existe un teléfono con ese número");
+        }
+      }
+
+      if(personaInput.correoInput) {
+        correo = await Correo.findOne(personaInput.correoInput);
+        if (correo) {
+          throw new UserInputError("Ya existe un correo con ese email");
+        }
+      }
+
+      if (personaInput.cedula_identidad) {
+        const personaExistente = await Persona.findOne({
+          where: { cedula_identidad: personaInput.cedula_identidad }
+        });
+        if (personaExistente) {
+          throw new UserInputError("Ya existe una persona con esa cédula de identidad");
+        }
+      }
+
       // 1. Validar que no exista una persona con la misma cedula_identidad
       const personaExistente = await Persona.findOne({
         where: { cedula_identidad: personaInput.cedula_identidad }
