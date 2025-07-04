@@ -70,8 +70,6 @@ export function authorize (roles, resolver) {
   return function (obj, body, context, info) {
     if(body.password) console.log('body: ', body.email);
     else console.log('body: ', body);
-    console.log('credentials: ', context.credentials);
-    console.log('Query o Mutation: ', info.fieldName);
     const options = {
       obj,
       body,

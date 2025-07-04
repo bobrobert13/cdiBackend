@@ -13,7 +13,7 @@ let env;
 if (process.env.NODE_ENV) {
   env = process.env.NODE_ENV;
 }
-// si no se indica el entorno, siempre será dev
+
 else {
   env = "development";
   process.env.NODE_ENV = "development";

@@ -1,8 +1,6 @@
 import { UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
-// Asume que tienes un modelo Usuario de Sequelize importado:
-
 // input create example:
 // {
 //   "input": {
