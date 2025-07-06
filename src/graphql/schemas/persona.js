@@ -3,6 +3,7 @@ export const persona = `
     nombre2: String
     apellido1: String
     apellido2: String
+    nacionalidad: String
     sexo: String
     edad: Int
     estado_civil: String
@@ -89,6 +90,7 @@ input ActualizarDireccionInput {
     apellido2: String
     sexo: String
     edad: Int
+    nacionalidad: String
     estado_civil: String
     ocupacion: String
     cedula_identidad: String!
@@ -109,6 +111,7 @@ input ActualizarDireccionInput {
     sexo: String
     edad: Int
     estado_civil: String
+    nacionalidad: String
     ocupacion: String
     cedula_identidad: String
       telefonoInput: CrearTelefonoInput

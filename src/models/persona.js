@@ -13,6 +13,11 @@ const Persona = sequelize.define('Persona', {
     allowNull: false
   },
 
+  nacionalidad: {
+    type: DataTypes.STRING(25),
+    allowNull: false
+  },
+
   sexo: {
     type: DataTypes.STRING(10),
     allowNull: true

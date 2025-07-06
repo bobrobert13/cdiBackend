@@ -199,14 +199,14 @@ export const Mutation = {
 
       
         if (personaInput.telefonoInput) {
-        telefono = await Telefono.findOne(personaInput.telefonoInput);
+        telefono = await Telefono.findOne({ where: {numero: personaInput.telefonoInput.numero} });
         if (telefono) {
           throw new UserInputError("Ya existe un teléfono con ese número");
         }
       }
 
       if(personaInput.correoInput) {
-        correo = await Correo.findOne(personaInput.correoInput);
+        correo = await Correo.findOne({ where: {correo: personaInput.correoInput.correo} });
         if (correo) {
           throw new UserInputError("Ya existe un correo con ese email");
         }
