@@ -42,7 +42,14 @@ export const Query = {
   },
 
   doctoresCDI: async (_, { id_cdi }) => {
-    const doctores = await Doctor.findAll({ where: { fk_cdi_id: id_cdi }, include: [{ model: Usuario, as: 'usuarios', }, { model: Persona, as: 'persona' }] });
+    const doctores = await Doctor.findAll({ where: { fk_cdi_id: id_cdi }, include: [
+      { model: Usuario, as: 'usuarios', }, 
+      { model: Persona, as: 'persona', include: [
+        { model: Telefono, as: "telefono" },
+        { model: Correo, as: "correo" },
+        { model: Direccion, as: "direccion" },
+      ] }
+    ] });
     return doctores;
   },
 

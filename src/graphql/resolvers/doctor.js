@@ -228,7 +228,7 @@ export const Mutation = {
 	},
 
 	actualizarDoctor: async (parent, { id_doctor, input }) => {
-		// 1. Buscar el doctor existente
+
 		const doctor = await Doctor.findByPk(id_doctor, {
 			include: [
 				{
@@ -245,7 +245,6 @@ export const Mutation = {
 
 		if (!doctor) throw new UserInputError("Doctor no encontrado");
 
-		// 2. Actualizar datos del doctor
 		await doctor.update({
 			anos_experiencia: input.doctorInput.anos_experiencia || doctor.anos_experiencia,
 			numero_carnet: input.doctorInput.numero_carnet || doctor.numero_carnet,
@@ -253,7 +252,6 @@ export const Mutation = {
 			horario: input.doctorInput.horario || doctor.horario,
 		});
 
-		// 3. Si viene personaInput, actualizar persona y sus relaciones
 		if (input.personaInput) {
 			const personaInput = input.personaInput;
 			const persona = doctor.persona.get();
@@ -262,7 +260,6 @@ export const Mutation = {
 			const direccionActual = persona.direccion.get();
 
 
-			// Actualizar teléfono si viene
 			if (personaInput.telefonoInput) {
 				if (telefonoActual) {
 					await Telefono.update(personaInput.telefonoInput, { where: { id_telefono: telefonoActual.id_telefono } });
@@ -272,7 +269,6 @@ export const Mutation = {
 				}
 			}
 
-			// Actualizar correo si viene
 			if (personaInput.correoInput) {
 				if (correoActual.correo) {
 					await Correo.update(personaInput.correoInput, { where: { id_correo: correoActual.id_correo } });
@@ -283,7 +279,6 @@ export const Mutation = {
 				}
 			}
 
-			// Actualizar dirección si viene
 			if (personaInput.direccionInput) {
 				if (direccionActual.id_direccion) {
 					await Direccion.update(personaInput.direccionInput, { where: { id_direccion: direccionActual.id_direccion } });
@@ -293,7 +288,6 @@ export const Mutation = {
 				}
 			}
 
-			// Actualizar campos simples de persona
 			const camposPersona = { ...personaInput };
 			delete camposPersona.telefonoInput;
 			delete camposPersona.correoInput;
@@ -302,7 +296,6 @@ export const Mutation = {
 			await Persona.update(camposPersona, { where: { id_persona: persona.id_persona } });
 		}
 
-		// SI VIENE usuarioInput, actualizar el usuario:
 		if (input.usuarioInput) {
 			const usuarioInput = input.usuarioInput;
 			const usuario = await Usuario.findOne({
@@ -313,12 +306,10 @@ export const Mutation = {
 			await usuario.update({
 				nombre_usuario: usuarioInput.nombre_usuario || usuario.nombre_usuario,
 				contrasena: await createPassword(usuarioInput.contrasena) || usuario.contrasena,
-				// rol: usuarioInput.rol || usuario.rol,
 				estado: usuarioInput.estado || usuario.estado,
 			});
 		}
 
-		// 4. Retornar doctor actualizado con todas las relaciones
 		const doctorActualizado = await Doctor.findByPk(doctor.id_doctor, {
 			include: [
 				{
