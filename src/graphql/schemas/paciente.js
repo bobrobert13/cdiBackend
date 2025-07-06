@@ -35,6 +35,7 @@ const types = `
     tipo_de_sangre: String
     alergias: String
     fk_doctor_id: ID!
+    fk_cdi_id: ID!
     personaInput: CrearPersonaInput!
   }
 

@@ -14,12 +14,12 @@ const Direccion = sequelize.define('Direccion', {
   },
 
   codigo_postal: {
-    type: DataTypes.STRING(10),
+    type: DataTypes.INTEGER,
     allowNull: true
   },
 
   numero_casa: {
-    type: DataTypes.STRING(200),
+    type: DataTypes.INTEGER,
     allowNull: true
   },
 

@@ -8,11 +8,11 @@ export const persona = `
     edad: Int
     estado_civil: String
     ocupacion: String
-    cedula_identidad: String!
+    cedula_identidad: Float!
     telefono: Telefono
     correo: Correo
     direccion: Direccion
-    fk_cdi_id: Int
+    fk_cdi_id: ID
     fk_direccion_id: Int
     fk_telefono_id: Int
     fk_correo_id: Int 
@@ -23,7 +23,7 @@ const types = `
 
 type Telefono {
     id_telefono: ID!
-    codigo: String!
+    codigo: Int!
     numero: String!
   }
 
@@ -48,7 +48,7 @@ type Telefono {
   }
 
   input CrearTelefonoInput {
-  codigo: String!
+  codigo: Int!
   numero: String!
 }
 
@@ -66,7 +66,7 @@ input CrearDireccionInput {
 }
 
 input ActualizarTelefonoInput {
-  codigo: String
+  codigo: Int
   numero: String
 }
 
@@ -93,8 +93,8 @@ input ActualizarDireccionInput {
     nacionalidad: String
     estado_civil: String
     ocupacion: String
-    cedula_identidad: String!
-  fk_cdi_id: Int  
+    cedula_identidad: Float!
+  fk_cdi_id: ID  
   fk_direccion_id: Int
   fk_telefono_id: Int
   fk_correo_id: Int
@@ -113,11 +113,11 @@ input ActualizarDireccionInput {
     estado_civil: String
     nacionalidad: String
     ocupacion: String
-    cedula_identidad: String
+    cedula_identidad: Float
       telefonoInput: CrearTelefonoInput
   correoInput: CrearCorreoInput
   direccionInput: CrearDireccionInput
-    fk_cdi_id: Int
+    fk_cdi_id: ID
     fk_direccion_id: Int
     fk_telefono_id: Int
     fk_correo_id: Int

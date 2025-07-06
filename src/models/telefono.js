@@ -9,12 +9,12 @@ module.exports = (sequelize) => {
       autoIncrement: true
     },
     codigo: {
-      type: DataTypes.STRING(11),
-      allowNull: false,
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     numero: {
-      type: DataTypes.STRING(16),
-      allowNull: false,
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
   }, {
     tableName: 'telefonos'

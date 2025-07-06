@@ -47,6 +47,8 @@ export const Query = {
   },
 
   pacientesCDI: async (_, { id_cdi }) => {
+    console.log('ID CDI', id_cdi);
+    
     const pacientes = await Paciente.findAll({
       where: { fk_cdi_id: id_cdi }, include: [{
         model: Persona, as: 'persona', include: [
@@ -56,6 +58,8 @@ export const Query = {
         ],
       }]
     });
+    console.log('PACIENTES DE CDI', pacientes);
+    
     return pacientes;
   }
 
