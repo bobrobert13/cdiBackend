@@ -39,6 +39,11 @@ Persona.hasOne(Doctor, {
     as: 'doctor'
 });
 
+
+
+
+
+
 // Relación entre Persona y Paciente
 Paciente.belongsTo(Persona, {
     foreignKey: 'fk_persona_id',
@@ -192,6 +197,13 @@ Doctor.hasMany(Paciente, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
     as: 'pacientes'
+});
+
+Paciente.belongsTo(Doctor, {
+    foreignKey: 'fk_doctor_id', 
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    as: 'doctor' 
 });
 
 
@@ -409,7 +421,7 @@ Paciente.hasMany(Tratamiento, {
     as: 'tratamientos'
 });
 
-// tratamiento tiene un paciente
+
 Tratamiento.belongsTo(Paciente, {
     foreignKey: 'fk_paciente_id',
     as: 'paciente'

@@ -16,6 +16,7 @@ export const paciente = `
   tratamientos: [Tratamiento]
   diagnosticos: [Diagnostico]
   hospitalizaciones: [Hospitalizacion]
+  doctor: Doctor
   emergencias: [Emergencia]
   createdAt: Date
   updatedAt: Date

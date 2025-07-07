@@ -73,55 +73,67 @@ export const Query = {
     try {
       const pacientes = await Paciente.findAll(
         {
-        include: [
-          {
-            model: Persona,
-            as: "persona",
-            include: [
-              { model: Telefono, as: "telefono" },
-              { model: Correo, as: "correo" },
-              { model: Direccion, as: "direccion" },
-            ],
-          },
-          {
-            model: Diagnostico,
-            as: "diagnosticos",
-            include: [
-              {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
-            ]
-          },
-          {
-            model: Consulta,
-            as: "consultas",
-            include: [
-              {model: CDI, as: 'cdis' },
-              {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
-            ]
-          },
-          {
-            model: Examenes,
-            as: "examenes",
-            include: [
-               {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
-            ]
-          },
-          {
-            model: Medicamento,
-            as: "medicamentos",
-            include: [
-               {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
-            ]
-          },
-          {
-            model: Tratamiento,
-            as: "tratamientos",
-            include: [
-               {model: Doctor, as: 'doctor', include: [{model: Persona, as: 'persona' }] },
-            ]
-          },
-        ],
-      }
-    );
+          include: [
+            {
+              model: Doctor, as: 'doctor', include: [{
+                model: Persona, as: 'persona',
+                include: [
+                  { model: Telefono, as: "telefono" },
+                  { model: Correo, as: "correo" },
+                  { model: Direccion, as: "direccion" },
+                ]
+              }]
+            },
+            {
+              model: Persona,
+              as: "persona",
+              include: [
+                { model: Telefono, as: "telefono" },
+                { model: Correo, as: "correo" },
+                { model: Direccion, as: "direccion" },
+              ],
+            },
+            {
+              model: Diagnostico,
+              as: "diagnosticos",
+              include: [
+                { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+              ]
+            },
+            {
+              model: Consulta,
+              as: "consultas",
+              include: [
+                { model: CDI, as: 'cdis' },
+                { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+              ]
+            },
+            {
+              model: Examenes,
+              as: "examenes",
+              include: [
+                { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+              ]
+            },
+            {
+              model: Medicamento,
+              as: "medicamentos",
+              include: [
+                { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+              ]
+            },
+            {
+              model: Tratamiento,
+              as: "tratamientos",
+              include: [
+                { model: Doctor, as: 'doctor', include: [{ model: Persona, as: 'persona', }] },
+              ]
+            },
+          ],
+        }
+      );
+      console.log("TODOS LOS PACIENTES: ", pacientes);
+
       return pacientes;
     } catch (error) {
       console.error("Error al obtener pacientes:", error);
@@ -132,7 +144,7 @@ export const Query = {
   // Obtener un paciente por ID
   paciente: async (parent, { id_paciente }) => {
     try {
-      const paciente = await Paciente.findByPk(id_paciente, 
+      const paciente = await Paciente.findByPk(id_paciente,
         {
           include: [
             {
@@ -148,41 +160,41 @@ export const Query = {
               model: Diagnostico,
               as: "diagnosticos",
               include: [
-                {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+                { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
               ]
             },
             {
               model: Consulta,
               as: "consultas",
               include: [
-                {model: CDI, as: 'cdis' },
-                {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+                { model: CDI, as: 'cdis' },
+                { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
               ]
             },
             {
               model: Examenes,
               as: "examenes",
               include: [
-                 {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+                { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
               ]
             },
             {
               model: Medicamento,
               as: "medicamentos",
               include: [
-                 {model: Doctor, as: 'doctores', include: [{model: Persona, as: 'persona' }] },
+                { model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
               ]
             },
             {
               model: Tratamiento,
               as: "tratamientos",
               include: [
-                 {model: Doctor, as: 'doctor', include: [{model: Persona, as: 'persona' }] },
+                { model: Doctor, as: 'doctor', include: [{ model: Persona, as: 'persona' }] },
               ]
             },
           ],
         }
-    );
+      );
       if (!paciente) throw new UserInputError("Paciente no encontrado");
       return paciente;
     } catch (error) {
@@ -197,16 +209,16 @@ export const Mutation = {
     try {
       const { personaInput, ...pacienteInput } = input;
 
-      
-        if (personaInput.telefonoInput) {
-        telefono = await Telefono.findOne({ where: {numero: personaInput.telefonoInput.numero} });
+
+      if (personaInput.telefonoInput) {
+        telefono = await Telefono.findOne({ where: { numero: personaInput.telefonoInput.numero } });
         if (telefono) {
           throw new UserInputError("Ya existe un teléfono con ese número");
         }
       }
 
-      if(personaInput.correoInput) {
-        correo = await Correo.findOne({ where: {correo: personaInput.correoInput.correo} });
+      if (personaInput.correoInput) {
+        correo = await Correo.findOne({ where: { correo: personaInput.correoInput.correo } });
         if (correo) {
           throw new UserInputError("Ya existe un correo con ese email");
         }
@@ -228,10 +240,10 @@ export const Mutation = {
       if (personaExistente) {
         throw new UserInputError("Ya existe una persona con esa cédula de identidad");
       }
-    
+
       // 2. Crear registros relacionados si vienen en el input
       let telefono = null, correo = null, direccion = null;
-    
+
       if (personaInput.telefonoInput) {
         telefono = await Telefono.create(personaInput.telefonoInput);
       }
@@ -241,7 +253,7 @@ export const Mutation = {
       if (personaInput.direccionInput) {
         direccion = await Direccion.create(personaInput.direccionInput);
       }
-    
+
       // 3. Crear persona con las llaves foráneas de los registros creados
       const personaData = {
         ...personaInput,
@@ -249,20 +261,20 @@ export const Mutation = {
         fk_correo_id: correo ? correo.id_correo : null,
         fk_direccion_id: direccion ? direccion.id_direccion : null,
       };
-    
+
       // Quitar los inputs anidados para evitar error en el modelo
       delete personaData.telefonoInput;
       delete personaData.correoInput;
       delete personaData.direccionInput;
-    
+
       const persona = await Persona.create(personaData);
-    
+
       // 4. Crear paciente con la llave foránea de persona
       const paciente = await Paciente.create({
         ...pacienteInput,
         fk_persona_id: persona.id_persona,
       });
-    
+
       // 5. Retornar paciente con las relaciones anidadas
       const nuevoPaciente = await Paciente.findByPk(paciente.id_paciente, {
         include: [
@@ -277,7 +289,7 @@ export const Mutation = {
           },
         ],
       });
-    
+
       return {
         ...nuevoPaciente.get(),
         persona: {
@@ -324,7 +336,7 @@ export const Mutation = {
       }
     }
 
-   const pacienteActualizado = await Paciente.findByPk(id_paciente, {
+    const pacienteActualizado = await Paciente.findByPk(id_paciente, {
       include: [
         {
           model: Persona,
@@ -353,23 +365,23 @@ export const Mutation = {
 
     const paciente = await Paciente.findByPk(id_paciente);
     if (!paciente) throw new UserInputError("Paciente no encontrado");
-  
+
     const persona = await Persona.findByPk(paciente.fk_persona_id);
     if (persona) {
 
       const correo = await Correo.findByPk(persona.fk_correo_id);
       const telefono = await Telefono.findByPk(persona.fk_telefono_id);
       const direccion = await Direccion.findByPk(persona.fk_direccion_id);
-  
+
       if (correo) await correo.destroy();
       if (telefono) await telefono.destroy();
       if (direccion) await direccion.destroy();
-  
+
       await persona.destroy();
     }
-  
+
     await paciente.destroy();
-  
+
     return true;
   },
   // Resolver explícito para el campo persona en Paciente (opcional si usas include)
