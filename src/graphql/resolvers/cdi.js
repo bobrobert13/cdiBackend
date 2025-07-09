@@ -2,7 +2,7 @@ import { UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 import { Op, or } from "sequelize";
 
-import { Usuario, CDI, Doctor, Persona, Paciente, Telefono, Correo, Direccion } from "../../models";
+import { Usuario, CDI, Doctor, Persona, Paciente, Telefono, Correo, Direccion, Hospitalizacion, Emergencia, Diagnostico, Consulta, Examenes, Medicamento, Tratamiento } from "../../models";
 import { createPassword } from "../../utils/password";
 
 
@@ -57,13 +57,62 @@ export const Query = {
     console.log('ID CDI', id_cdi);
     
     const pacientes = await Paciente.findAll({
-      where: { fk_cdi_id: id_cdi }, include: [{
-        model: Persona, as: 'persona', include: [
-          { model: Telefono, as: "telefono" },
-          { model: Correo, as: "correo" },
-          { model: Direccion, as: "direccion" },
-        ],
-      }]
+      where: { fk_cdi_id: id_cdi }, include: [
+							{
+								model: Persona,
+								as: "persona",
+								include: [
+									{ model: Telefono, as: "telefono" },
+									{ model: Correo, as: "correo" },
+									{ model: Direccion, as: "direccion" },
+								],
+							},
+							{
+								model: Hospitalizacion,
+								as: 'hospitalizaciones',
+							},
+							{
+								model: Emergencia,
+								as: 'emergencias',
+							},
+							{
+								model: Diagnostico,
+								as: "diagnosticos",
+								include: [
+									{ model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+								],
+								order: [['createdAt', 'DESC']]
+							},
+							{
+								model: Consulta,
+								as: "consultas",
+								include: [
+									{ model: CDI, as: 'cdis' },
+									{ model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+								]
+							},
+							{
+								model: Examenes,
+								as: "examenes",
+								include: [
+									{ model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+								]
+							},
+							{
+								model: Medicamento,
+								as: "medicamentos",
+								include: [
+									{ model: Doctor, as: 'doctores', include: [{ model: Persona, as: 'persona' }] },
+								]
+							},
+							{
+								model: Tratamiento,
+								as: "tratamientos",
+								include: [
+									{ model: Doctor, as: 'doctor', include: [{ model: Persona, as: 'persona' }] },
+								]
+							},
+    ]
     });
     console.log('PACIENTES DE CDI', pacientes);
     
