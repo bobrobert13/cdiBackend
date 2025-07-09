@@ -1,9 +1,8 @@
 {
   "name": "CDI-BACKEND",
   "version": "0.0.1",
-  "description": "PROYECTO CDI PARA INGENIERIA",
-  "author": "Robert Caraballo",
-  "email": "rob132ca@gmail.com",
+  "description": "CDI",
+  "author": "jonathan <jhonatansalazar968@gmail.com>",
   "scripts": {
     "dev": "NODE_ENV=development  nodemon ./src/server.js --exec babel-node",
     "debug": "NODE_ENV=development  nodemon ./src/server.js --exec babel-node",
