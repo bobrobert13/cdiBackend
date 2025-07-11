@@ -202,8 +202,9 @@ export const Mutation = {
 			if (usuario.estado !== "activo") {
 				throw new UserInputError("Usuario inactivo o suspendido");
 			}
+			
 			const valid = await passwordMatch(contrasena, usuario.contrasena);
-			if (!valid) throw new UserInputError("Contraseña incorrecta");
+			if (!valid) throw new UserInputError("Usuario o contraseña incorrectos");
 			const token = createToken(usuario.get());
 			return token
 		} catch (error) {
