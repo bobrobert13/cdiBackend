@@ -8,7 +8,7 @@ const dataBaseConnect = async () => {
       
       await sequelize.sync({ 
         force: false, // true = elimina y recrea tablas
-        alter: true   // true = modifica tablas existentes
+        alter: false   // true = modifica tablas existentes
       }).then(() => {})
       console.log('✅ Modelos sincronizados correctamente');
       

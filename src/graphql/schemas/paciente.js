@@ -18,6 +18,7 @@ export const paciente = `
   hospitalizaciones: [Hospitalizacion]
   doctor: Doctor
   emergencias: [Emergencia]
+  cdi: CDI
   createdAt: Date
   updatedAt: Date
 `;

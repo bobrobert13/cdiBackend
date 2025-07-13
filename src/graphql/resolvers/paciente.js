@@ -74,6 +74,7 @@ export const Query = {
       const pacientes = await Paciente.findAll(
         {
           include: [
+           { model: CDI, as: 'cdi' },
             {
               model: Doctor, as: 'doctor', include: [{
                 model: Persona, as: 'persona',
