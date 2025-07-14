@@ -10,11 +10,42 @@ export const Query = {
 
  cdis: async () => {
   try {
-   const todosCDI = await CDI.findAll({ include: [{ model: Usuario, as: 'usuarios', 
-          where: {
-            '$usuarios.fk_doctor_id$': null 
-          }
-    },], order: [['createdAt', 'DESC']] });
+   const todosCDI = await CDI.findAll({
+    include: [{
+     model: Usuario, as: 'usuarios',
+     where: {
+      '$usuarios.fk_doctor_id$': null
+     }
+    },
+    {
+     model: Doctor,
+     as: 'doctores',
+     include: [
+      {
+       model: Persona, as: 'persona', include: [
+        { model: Telefono, as: "telefono" },
+        { model: Correo, as: "correo" },
+        { model: Direccion, as: "direccion" },
+       ]
+      },
+
+     ]
+    },
+    {
+     model: Paciente,
+     as: 'pacientes',
+     include: [
+      {
+       model: Persona, as: 'persona', include: [
+        { model: Telefono, as: "telefono" },
+        { model: Correo, as: "correo" },
+        { model: Direccion, as: "direccion" },
+       ]
+      },
+     ]
+    }
+    ], order: [['createdAt', 'DESC']]
+   });
    return todosCDI;
   } catch (error) {
    console.error('Error al obtener los CDI:', error);

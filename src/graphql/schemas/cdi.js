@@ -8,6 +8,8 @@ const types = `
     cuadrante: String
     estado: String
     usuarios: Usuario
+    doctores: [Doctor]
+    pacientes: [Paciente]
   }
 
   input CrearCDIInput {
