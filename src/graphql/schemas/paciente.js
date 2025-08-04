@@ -49,7 +49,7 @@ const types = `
     antecedentes_familiares: String
     tipo_de_sangre: String
     alergias: String
-    personaInput: ActualizarPersonaInput      
+    personaInput: ActualizarPersonaInput
   }
 `;
 

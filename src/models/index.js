@@ -191,6 +191,12 @@ Doctor.hasMany(Consulta, {
     as: 'consultas'
 });
 
+// consulta pertenece a un doctor
+Consulta.belongsTo(Doctor, {
+    foreignKey: 'fk_doctor_id',
+    as: 'doctor'
+});
+
 //Doctor tiene pacientes
 Doctor.hasMany(Paciente, {
     foreignKey: 'fk_doctor_id',

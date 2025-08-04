@@ -1,71 +1,7 @@
 import { UserInputError } from "apollo-server-express";
 import { authorize } from "../../utils/authorize-resolvers";
 
-// input create example:
-// {
-//   "input": {
-//     "enfermedades_cronicas": "Ninguna",
-//     "peso": 72.5,
-//     "vacunas": "Covid, Hepatitis",
-//     "discapacidad": "",
-//     "antecedentes_familiares": "Diabetes",
-//     "tipo_de_sangre": "O+",
-//     "alergias": "Penicilina",
-//     "personaInput": {
-//       "nombre1": "Juan",
-//       "nombre2": "Carlos",
-//       "apellido1": "Pérez",
-//       "apellido2": "Gómez",
-//       "sexo": "M",
-//       "edad": 35,
-//       "estado_civil": "Soltero",
-//       "ocupacion": "Ingeniero",
-//       "cedula_identidad": "12345678",
-//       "telefonoInput": {
-//         "codigo": "0414",
-//         "numero": "9876543"
-//       },
-//       "correoInput": {
-//         "correo": "nuevo@email.com"
-//       },
-//       "direccionInput": {
-//         "parroquia": "Centro",
-//         "codigo_postal": "1010",
-//         "numero_casa": "12",
-//         "calle": "Nueva calle",
-//         "punto_referencia": "Cerca de la plaza",
-//         "sector": "El Centro"
-//       }
-//     }
-//   }
-// }
-
-//input update example:
-// {
-//   "id_paciente": 1,
-//   "input": {
-//     "peso": 72.5,
-//     "alergias": "Penicilina",
-//     "personaInput": {
-//       "nombre1": "Juan",
-//       "apellido1": "Pérez",
-//       "telefonoInput": {
-//         "codigo": "0414",
-//         "numero": "9876543"
-//       },
-//       "correoInput": {
-//         "correo": "nuevo@email.com"
-//       },
-//       "direccionInput": {
-//         "calle": "Nueva calle",
-//         "parroquia": "Centro"
-//       }
-//     }
-//   }
-// }
 import { Paciente, Persona, Telefono, Correo, Direccion, Diagnostico, CDI, Doctor, Consulta, Examenes, Medicamento, Tratamiento } from "../../models";
-
-
 
 export const Query = {
   // Obtener todos los pacientes
@@ -202,6 +138,7 @@ export const Query = {
       throw new UserInputError(error.message);
     }
   },
+
 };
 
 export const Mutation = {
