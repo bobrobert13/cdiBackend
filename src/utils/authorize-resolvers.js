@@ -68,8 +68,6 @@ function tokenHelper (type, roles, resolver, options) {
 
 export function authorize (roles, resolver) {
   return function (obj, body, context, info) {
-    if(body.password) console.log('body: ', body.email);
-    else console.log('body: ', body);
     const options = {
       obj,
       body,

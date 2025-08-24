@@ -175,11 +175,17 @@ export const Mutation = {
 
 	actualizarUsuario: authorize([], async (obj, { id_usuario, input }) => {
 		const usuario = await Usuario.findByPk(id_usuario);
+		console.log('usuario en cuestion: ', input);
+		
 		if (!usuario) throw new UserInputError("Usuario no encontrado");
 		try {
 			if	(input.contrasena) {
 				input.contrasena = await createPassword(input.contrasena);
 			}
+			else {
+				delete input.contrasena;
+			}
+			
 			await usuario.update(input);
 			return usuario;
 		} catch (error) {
