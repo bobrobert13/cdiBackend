@@ -3,6 +3,8 @@ import { persona } from './persona';
 export const paciente = `
   id_paciente: ID!
   enfermedades_cronicas: String
+  documento_identidad_representante: Float
+  numero_orden_representante: Float
   peso: Float
   vacunas: String
   discapacidad: String
@@ -31,6 +33,8 @@ const types = `
   input CrearPacienteInput {
     enfermedades_cronicas: String
     peso: Float
+    documento_identidad_representante: Float
+    numero_orden_representante: Float
     vacunas: String
     discapacidad: String
     antecedentes_familiares: String

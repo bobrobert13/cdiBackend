@@ -146,7 +146,8 @@ export const Mutation = {
   crearPaciente: async (parent, { input }) => {
     try {
       const { personaInput, ...pacienteInput } = input;
-
+      console.log('recibiendo input nuevo paciente: ', pacienteInput);
+      
 
       if (personaInput.telefonoInput) {
         telefono = await Telefono.findOne({ where: { numero: personaInput.telefonoInput.numero } });

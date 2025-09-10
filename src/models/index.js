@@ -40,10 +40,6 @@ Persona.hasOne(Doctor, {
 });
 
 
-
-
-
-
 // Relación entre Persona y Paciente
 Paciente.belongsTo(Persona, {
     foreignKey: 'fk_persona_id',

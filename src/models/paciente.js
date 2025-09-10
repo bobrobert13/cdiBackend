@@ -13,6 +13,16 @@ const Paciente = sequelize.define('Paciente', {
     allowNull: true
   },
 
+  documento_identidad_representante: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+
+  numero_orden_representante: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+
   peso: {
     type: DataTypes.DECIMAL(5, 2),
     allowNull: true
