@@ -1,6 +1,8 @@
 const types = `
 type Emergencia {
   id_emergencia: ID!
+  fecha_ingreso: Date!
+  fecha_egreso: Date
   motivo_emergencia: String!
   diagnostico_provisional: String
   estado_paciente: String!
@@ -18,6 +20,8 @@ type Emergencia {
 
 input EmergenciaInput {
   motivo_emergencia: String!
+  fecha_ingreso: Date!
+  fecha_egreso: Date
   diagnostico_provisional: String
   estado_paciente: String!
   procesamiento_realizado: String
