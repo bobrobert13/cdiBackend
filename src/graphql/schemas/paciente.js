@@ -60,6 +60,7 @@ const types = `
 const queries = `
   pacientes: [Paciente!]!
   paciente(id_paciente: ID!): Paciente
+  personaPorCedula(cedula_identidad: Float!): Persona
 `;
 
 const mutations = `

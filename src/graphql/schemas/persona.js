@@ -4,6 +4,8 @@ export const persona = `
     apellido1: String
     apellido2: String
     nacionalidad: String
+    paciente: Paciente
+    doctor: Doctor
     sexo: String
     edad: Int
     estado_civil: String
@@ -15,7 +17,7 @@ export const persona = `
     fk_cdi_id: ID
     fk_direccion_id: Int
     fk_telefono_id: Int
-    fk_correo_id: Int 
+    fk_correo_id: Int
 `
 
 
@@ -94,7 +96,7 @@ input ActualizarDireccionInput {
     estado_civil: String
     ocupacion: String
     cedula_identidad: Float!
-  fk_cdi_id: ID  
+  fk_cdi_id: ID
   fk_direccion_id: Int
   fk_telefono_id: Int
   fk_correo_id: Int
