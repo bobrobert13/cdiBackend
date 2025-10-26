@@ -15,7 +15,7 @@ export const Query = {
 
 export const Mutation = {
     crearDiagnostico: async (parent, { input }) => {
-        return await Diagnostico.create(input);
+        return await Diagnostico.create({...input, confidicion: input.condicion.toLowerCase()});
       },
       actualizarDiagnostico: async (_, { id_diagnostico, input }) => {
         try {
@@ -23,7 +23,7 @@ export const Mutation = {
           if (!diagnostico) {
             throw new Error('diagnostico no encontrado');
           }
-          await diagnostico.update(input);
+          await diagnostico.update({...input, condicion: input.condicion.toLowerCase()});
           return diagnostico;
         } catch (error) {
           throw new UserInputError(error.message || 'Error al actualizar el diagnostico');

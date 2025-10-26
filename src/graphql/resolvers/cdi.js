@@ -184,22 +184,39 @@ export const Query = {
   },
 
   // #2: Total de Pacientes nuevos por mes y por semana en un CDI
-  cantidadPacientesNuevos: async (_, { id_cdi, periodo }) => {
+  cantidadPacientesNuevos: async (_, { id_cdi, periodo, mes }) => {
     try {
       const period = periodo || 'month';
 
       if (period === 'month') {
-        const fourWeeksAgo = new Date();
-        fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
-
         const pacientesPorSemana = [];
 
-        for (let i = 0; i < 4; i++) {
-          const weekStart = new Date();
-          weekStart.setDate(weekStart.getDate() - (28 - (i * 7)));
+        // Si se recibe 'mes' (1-12), usar ese mes del año actual. Si no, usar el mes actual.
+        const ahora = new Date();
+        const anio = ahora.getFullYear();
+        const monthIndex = (mes && Number.isInteger(mes) && mes >= 1 && mes <= 12) ? (mes - 1) : ahora.getMonth();
 
-          const weekEnd = new Date();
-          weekEnd.setDate(weekEnd.getDate() - (21 - (i * 7)));
+        const monthStart = new Date(anio, monthIndex, 1);
+        monthStart.setHours(0, 0, 0, 0);
+
+        const monthEnd = new Date(anio, monthIndex + 1, 1);
+        monthEnd.setHours(0, 0, 0, 0);
+
+        // Dividir el mes en bloques de 7 días (hasta 4 semanas aproximadas)
+        for (let i = 0; i < 4; i++) {
+          const weekStart = new Date(monthStart);
+          weekStart.setDate(monthStart.getDate() + (i * 7));
+
+          let weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekStart.getDate() + 7);
+
+          // No pasar de monthEnd
+          if (weekEnd > monthEnd) {
+            weekEnd = new Date(monthEnd);
+          }
+
+          // Si la semana comienza después del fin del mes, ya no hay más datos
+          if (weekStart >= monthEnd) break;
 
           const count = await Paciente.count({
             where: {
@@ -289,19 +306,39 @@ export const Query = {
 
   // #5: Total de consultas realizadas: El número total de veces que los pacientes fueron atendidos en un período dado (por ejemplo, semana, al mes).
 
-  totalConsultasRealizadasPeriodo: async (_, { id_cdi, periodo }) => {
+  totalConsultasRealizadasPeriodo: async (_, { id_cdi, periodo, mes }) => {
     try {
       const period = periodo || 'month';
 
       if (period === 'month') {
         const consultasPorSemana = [];
 
-        for (let i = 0; i < 4; i++) {
-          const weekStart = new Date();
-          weekStart.setDate(weekStart.getDate() - (28 - (i * 7)));
+        // Si se recibe 'mes' (1-12), usar ese mes del año actual. Si no, usar el mes actual.
+        const ahora = new Date();
+        const anio = ahora.getFullYear();
+        const monthIndex = (mes && Number.isInteger(mes) && mes >= 1 && mes <= 12) ? (mes - 1) : ahora.getMonth();
 
-          const weekEnd = new Date();
-          weekEnd.setDate(weekEnd.getDate() - (21 - (i * 7)));
+        const monthStart = new Date(anio, monthIndex, 1);
+        monthStart.setHours(0, 0, 0, 0);
+
+        const monthEnd = new Date(anio, monthIndex + 1, 1);
+        monthEnd.setHours(0, 0, 0, 0);
+
+        // Dividir el mes en bloques de 7 días (4 semanas aproximadas)
+        for (let i = 0; i < 4; i++) {
+          const weekStart = new Date(monthStart);
+          weekStart.setDate(monthStart.getDate() + (i * 7));
+
+          let weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekStart.getDate() + 7);
+
+          // No pasar de monthEnd
+          if (weekEnd > monthEnd) {
+            weekEnd = new Date(monthEnd);
+          }
+
+          // Si la semana comienza después del fin del mes, ya no hay más datos
+          if (weekStart >= monthEnd) break;
 
           const count = await Consulta.count({
             where: {
@@ -355,7 +392,7 @@ export const Query = {
 
   // #6: Consultas por Médico (o Profesional de la Salud)
 
-  totalConsultasRealizadasPorMedico: async (_, { id_cdi, periodo }) => {
+  totalConsultasRealizadasPorMedico: async (_, { id_cdi, periodo, mes }) => {
     try {
       const period = periodo || 'month';
 
@@ -374,22 +411,24 @@ export const Query = {
       const consultasPorDoctor = [];
 
       if (period === 'month') {
-        const mesInicio = new Date();
-        mesInicio.setDate(1);
-        mesInicio.setHours(0, 0, 0, 0);
+        // Si se recibe 'mes' (1-12), usar ese mes del año actual. Si no, usar el mes actual.
+        const ahora = new Date();
+        const anio = ahora.getFullYear();
+        const monthIndex = (mes && Number.isInteger(mes) && mes >= 1 && mes <= 12) ? (mes - 1) : ahora.getMonth();
 
-        const mesFin = new Date();
-        mesFin.setMonth(mesFin.getMonth() + 1);
-        mesFin.setDate(1);
-        mesFin.setHours(0, 0, 0, 0);
+        const monthStart = new Date(anio, monthIndex, 1);
+        monthStart.setHours(0, 0, 0, 0);
+
+        const monthEnd = new Date(anio, monthIndex + 1, 1);
+        monthEnd.setHours(0, 0, 0, 0);
 
         for (const doctor of doctores) {
           const count = await Consulta.count({
             where: {
               fk_doctor_id: parseInt(doctor.id_doctor),
               createdAt: {
-                [Op.gte]: mesInicio,
-                [Op.lt]: mesFin
+                [Op.gte]: monthStart,
+                [Op.lt]: monthEnd
               }
             }
           });
@@ -460,7 +499,7 @@ export const Query = {
             where: {
               edad: {
                 [Op.gte]: 13,
-                [Op.lte]: 28
+                [Op.lte]: 18
               }
             },
             attributes: []
@@ -503,7 +542,7 @@ export const Query = {
 
   // #8 Diagnosticos mas frecuentes: Top 10 diagnosticos mas frecuentes por CDI
 
-  top10DiagnosticosMasComunes: async (_, { id_cdi, periodo }) => {
+  top10DiagnosticosMasComunes: async (_, { id_cdi, periodo, mes }) => {
     try {
       const period = periodo || 'month';
 
@@ -511,13 +550,15 @@ export const Query = {
       let endDate = new Date();
 
       if (period === 'month') {
-        startDate = new Date();
-        startDate.setDate(1);
+        // Si se recibe 'mes' (1-12), usar ese mes del año actual. Si no, usar el mes actual.
+        const ahora = new Date();
+        const anio = ahora.getFullYear();
+        const monthIndex = (mes && Number.isInteger(mes) && mes >= 1 && mes <= 12) ? (mes - 1) : ahora.getMonth();
+
+        startDate = new Date(anio, monthIndex, 1);
         startDate.setHours(0, 0, 0, 0);
 
-        endDate = new Date();
-        endDate.setMonth(endDate.getMonth() + 1);
-        endDate.setDate(1);
+        endDate = new Date(anio, monthIndex + 1, 1);
         endDate.setHours(0, 0, 0, 0);
       } else if (period === 'week') {
         startDate = new Date();
