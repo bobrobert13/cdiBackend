@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
 
     fecha_ingreso: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
 
     fecha_egreso: {
