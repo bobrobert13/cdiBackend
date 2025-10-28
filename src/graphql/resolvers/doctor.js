@@ -8,7 +8,11 @@ export const Query = {
 
  doctores: async () => {
   const todosDoctores = await Doctor.findAll({
-   include: [{ model: Persona, as: "persona" },
+   include: [{ model: Persona, as: "persona", include: [
+    { model: Telefono, as: "telefono" },
+    { model: Correo, as: "correo" },
+    { model: Direccion, as: "direccion" },
+   ] },
    {
     model: Paciente, as: 'pacientes', include: [
      {
