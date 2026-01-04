@@ -24,6 +24,9 @@ export const Mutation = {
             throw new Error('emergencia no encontrada');
           }
           emergencia.estado_emergencia = estado_emergencia;
+          if (estado_emergencia === 'Finalizado') {
+            emergencia.fecha_egreso = new Date();
+          }
           await emergencia.save();
           return true;
         } catch (error) {

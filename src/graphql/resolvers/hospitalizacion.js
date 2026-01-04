@@ -24,6 +24,9 @@ export const Mutation = {
             throw new Error('hospitalización no encontrada');
           }
           hospitalizacion.estado = estado;
+          if (estado === 'Finalizado') {
+            hospitalizacion.fecha_egreso = new Date();
+          }
           await hospitalizacion.save();
           return true;
         } catch (error) {
