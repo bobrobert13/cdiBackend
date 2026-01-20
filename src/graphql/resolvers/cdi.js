@@ -600,6 +600,37 @@ export const Query = {
     }
   },
 
+  // #9 Estadística de pacientes por area_de_trabajo del doctor
+  cantidadPacientesPorAreaDeTrabajo: async (_, { id_cdi }) => {
+    try {
+      const cantidadPacientesPorArea = await Paciente.findAll({
+        where: { fk_cdi_id: id_cdi },
+        include: [{
+          model: Doctor,
+          as: 'doctor',
+          attributes: [],
+        }],
+        attributes: [
+          [Sequelize.col('doctor.area_de_trabajo'), 'area'],
+          [Sequelize.fn('COUNT', Sequelize.col('id_paciente')), 'total']
+        ],
+        group: [Sequelize.col('doctor.area_de_trabajo')],
+        order: [[Sequelize.literal('total'), 'DESC']]
+      });
+
+      const areas = cantidadPacientesPorArea.map(item => item.getDataValue('area') || 'Sin Área');
+      const totales = cantidadPacientesPorArea.map(item => parseInt(item.getDataValue('total')));
+
+      return {
+        areas,
+        totales
+      };
+    } catch (error) {
+      console.error(error);
+      throw new UserInputError(error.message);
+    }
+  },
+
 };
 
 export const Mutation = {

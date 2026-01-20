@@ -23,6 +23,11 @@ const types = `
     totales: [Int]
   }
 
+  type CantidadPacientesPorAreaDeTrabajo {
+    areas: [String]
+    totales: [Int]
+  }
+
   type DistribucionPorGenero {
     masculino: Int
     femenino: Int
@@ -54,6 +59,7 @@ const queries = `
   pacientesCDI(id_cdi: ID!): [Paciente!]!
   cantidadPacienteTotales(id_cdi: ID!): Int!
   cantidadPacientesNuevos(id_cdi: ID!, periodo: String, mes: Int): [Int]
+  cantidadPacientesPorAreaDeTrabajo(id_cdi: ID!): CantidadPacientesPorAreaDeTrabajo!
   distribucionPorGenero(id_cdi: ID!): DistribucionPorGenero!
   distribucionPorEdad(id_cdi: ID!): [Int]
   totalConsultasRealizadasPeriodo(id_cdi: ID!, periodo: String, mes: Int): [Int]
