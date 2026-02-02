@@ -32,7 +32,10 @@ export const Query = {
 
  doctorPacientes: async (parent, { id_doctor }) => {
   try {
-   const doctor = await Doctor.findByPk(id_doctor, {
+   const doctor = await Doctor.findOne( {
+    where: {
+        fk_cdi_id: id_doctor
+    },
     include: [
      {
       model: Usuario, as: 'usuarios',
