@@ -271,32 +271,81 @@ export const Query = {
   // #4: Distribución por Género: Un conteo simple de pacientes masculinos y femeninos.
   distribucionPorGenero: async (_, { id_cdi }) => {
     try {
-      const countMasculino = await Paciente.count({
-        where: { fk_cdi_id: id_cdi },
-        include: [{
-          model: Persona,
-          as: 'persona',
-          where: {
-            sexo: 'Masculino'
-          }
-        }]
+      const queries = [];
+
+      // Rangos de edad
+      const ageRanges = [
+        { min: 0, max: 12, label: 'Ninos' },
+        { min: 13, max: 18, label: 'Adolescentes' },
+        { min: 19, max: 64, label: 'Adultos' },
+        { min: 65, max: 200, label: 'Mayores' } // 200 como limite superior seguro
+      ];
+
+      // Generos
+      const genders = ['Masculino', 'Femenino'];
+
+      // Construir las promesas para todas las combinaciones
+      genders.forEach(gender => {
+        // Total por genero
+        queries.push(
+          Paciente.count({
+            where: { fk_cdi_id: id_cdi },
+            include: [{
+              model: Persona,
+              as: 'persona',
+              where: { sexo: gender }
+            }]
+          })
+        );
+
+        // Por rango de edad
+        ageRanges.forEach(range => {
+          queries.push(
+            Paciente.count({
+              where: { fk_cdi_id: id_cdi },
+              include: [{
+                model: Persona,
+                as: 'persona',
+                where: {
+                  sexo: gender,
+                  edad: {
+                    [Op.gte]: range.min,
+                    [Op.lte]: range.max
+                  }
+                }
+              }]
+            })
+          );
+        });
       });
 
-      const countFemenino = await Paciente.count({
-        where: { fk_cdi_id: id_cdi },
-        include: [{
-          model: Persona,
-          as: 'persona',
-          where: {
-            sexo: 'Femenino'
-          }
-        }]
-      });
+      const results = await Promise.all(queries);
+
+      // Mapear resultados
+      // results[0] = Total Masculino
+      // results[1] = Masculino 0-12
+      // results[2] = Masculino 13-18
+      // results[3] = Masculino 19-64
+      // results[4] = Masculino 65+
+      // results[5] = Total Femenino
+      // results[6] = Femenino 0-12
+      // results[7] = Femenino 13-18
+      // results[8] = Femenino 19-64
+      // results[9] = Femenino 65+
 
       return {
-        masculino: countMasculino || 0,
-        femenino: countFemenino || 0
+        masculino: results[0] || 0,
+        masculinoNinos: results[1] || 0,
+        masculinoAdolescentes: results[2] || 0,
+        masculinoAdultos: results[3] || 0,
+        masculinoMayores: results[4] || 0,
+        femenino: results[5] || 0,
+        femeninoNinas: results[6] || 0,
+        femeninoAdolescentes: results[7] || 0,
+        femeninoAdultas: results[8] || 0,
+        femeninoMayores: results[9] || 0
       };
+
     } catch (error) {
       throw new UserInputError(error.message);
     }

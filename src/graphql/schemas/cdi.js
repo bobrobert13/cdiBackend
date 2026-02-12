@@ -31,6 +31,14 @@ const types = `
   type DistribucionPorGenero {
     masculino: Int
     femenino: Int
+    masculinoNinos: Int
+    masculinoAdolescentes: Int
+    masculinoAdultos: Int
+    masculinoMayores: Int
+    femeninoNinas: Int
+    femeninoAdolescentes: Int
+    femeninoAdultas: Int
+    femeninoMayores: Int
   }
 
   input CrearCDIInput {
