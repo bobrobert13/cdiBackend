@@ -183,23 +183,43 @@ export const Query = {
     }
   },
 
-  // #2: Total de Pacientes nuevos por mes y por semana en un CDI
-  cantidadPacientesNuevos: async (_, { id_cdi, periodo, mes }) => {
+  // #2: Total de Pacientes nuevos por mes, por semana o por año en un CDI
+  cantidadPacientesNuevos: async (_, { id_cdi, periodo, mes, anio }) => {
     try {
       const period = periodo || 'month';
+      const ahora = new Date();
+      const anioSeleccionado = (anio && Number.isInteger(anio)) ? anio : ahora.getFullYear();
 
-      if (period === 'month') {
+      if (period === 'year') {
+        // Retorna 12 valores, uno por cada mes del año
+        const pacientesPorMes = [];
+        for (let m = 0; m < 12; m++) {
+          const mesStart = new Date(anioSeleccionado, m, 1);
+          mesStart.setHours(0, 0, 0, 0);
+          const mesEnd = new Date(anioSeleccionado, m + 1, 1);
+          mesEnd.setHours(0, 0, 0, 0);
+
+          const count = await Paciente.count({
+            where: {
+              fk_cdi_id: id_cdi,
+              createdAt: {
+                [Op.gte]: mesStart,
+                [Op.lt]: mesEnd
+              }
+            }
+          });
+          pacientesPorMes.push(count);
+        }
+        return pacientesPorMes;
+      } else if (period === 'month') {
         const pacientesPorSemana = [];
 
-        // Si se recibe 'mes' (1-12), usar ese mes del año actual. Si no, usar el mes actual.
-        const ahora = new Date();
-        const anio = ahora.getFullYear();
         const monthIndex = (mes && Number.isInteger(mes) && mes >= 1 && mes <= 12) ? (mes - 1) : ahora.getMonth();
 
-        const monthStart = new Date(anio, monthIndex, 1);
+        const monthStart = new Date(anioSeleccionado, monthIndex, 1);
         monthStart.setHours(0, 0, 0, 0);
 
-        const monthEnd = new Date(anio, monthIndex + 1, 1);
+        const monthEnd = new Date(anioSeleccionado, monthIndex + 1, 1);
         monthEnd.setHours(0, 0, 0, 0);
 
         // Dividir el mes en bloques de 7 días (hasta 4 semanas aproximadas)
@@ -210,12 +230,10 @@ export const Query = {
           let weekEnd = new Date(weekStart);
           weekEnd.setDate(weekStart.getDate() + 7);
 
-          // No pasar de monthEnd
           if (weekEnd > monthEnd) {
             weekEnd = new Date(monthEnd);
           }
 
-          // Si la semana comienza después del fin del mes, ya no hay más datos
           if (weekStart >= monthEnd) break;
 
           const count = await Paciente.count({
@@ -261,7 +279,7 @@ export const Query = {
 
         return pacientesPorDia || [];
       } else {
-        throw new UserInputError('Periodo no válido. Use "month" o "week".');
+        throw new UserInputError('Periodo no válido. Use "month", "week" o "year".');
       }
     } catch (error) {
       throw new UserInputError(error.message);
@@ -355,22 +373,42 @@ export const Query = {
 
   // #5: Total de consultas realizadas: El número total de veces que los pacientes fueron atendidos en un período dado (por ejemplo, semana, al mes).
 
-  totalConsultasRealizadasPeriodo: async (_, { id_cdi, periodo, mes }) => {
+  totalConsultasRealizadasPeriodo: async (_, { id_cdi, periodo, mes, anio }) => {
     try {
       const period = periodo || 'month';
+      const ahora = new Date();
+      const anioSeleccionado = (anio && Number.isInteger(anio)) ? anio : ahora.getFullYear();
 
-      if (period === 'month') {
+      if (period === 'year') {
+        // Retorna 12 valores, uno por cada mes del año
+        const consultasPorMes = [];
+        for (let m = 0; m < 12; m++) {
+          const mesStart = new Date(anioSeleccionado, m, 1);
+          mesStart.setHours(0, 0, 0, 0);
+          const mesEnd = new Date(anioSeleccionado, m + 1, 1);
+          mesEnd.setHours(0, 0, 0, 0);
+
+          const count = await Consulta.count({
+            where: {
+              fk_cdi_id: id_cdi,
+              createdAt: {
+                [Op.gte]: mesStart,
+                [Op.lt]: mesEnd
+              }
+            }
+          });
+          consultasPorMes.push(count);
+        }
+        return consultasPorMes;
+      } else if (period === 'month') {
         const consultasPorSemana = [];
 
-        // Si se recibe 'mes' (1-12), usar ese mes del año actual. Si no, usar el mes actual.
-        const ahora = new Date();
-        const anio = ahora.getFullYear();
         const monthIndex = (mes && Number.isInteger(mes) && mes >= 1 && mes <= 12) ? (mes - 1) : ahora.getMonth();
 
-        const monthStart = new Date(anio, monthIndex, 1);
+        const monthStart = new Date(anioSeleccionado, monthIndex, 1);
         monthStart.setHours(0, 0, 0, 0);
 
-        const monthEnd = new Date(anio, monthIndex + 1, 1);
+        const monthEnd = new Date(anioSeleccionado, monthIndex + 1, 1);
         monthEnd.setHours(0, 0, 0, 0);
 
         // Dividir el mes en bloques de 7 días (4 semanas aproximadas)
@@ -381,12 +419,10 @@ export const Query = {
           let weekEnd = new Date(weekStart);
           weekEnd.setDate(weekStart.getDate() + 7);
 
-          // No pasar de monthEnd
           if (weekEnd > monthEnd) {
             weekEnd = new Date(monthEnd);
           }
 
-          // Si la semana comienza después del fin del mes, ya no hay más datos
           if (weekStart >= monthEnd) break;
 
           const count = await Consulta.count({
@@ -432,7 +468,7 @@ export const Query = {
 
         return consultasPorDia || [];
       } else {
-        throw new UserInputError('Periodo no válido. Use "month" o "week".');
+        throw new UserInputError('Periodo no válido. Use "month", "week" o "year".');
       }
     } catch (error) {
       throw new UserInputError(error.message);
@@ -441,9 +477,11 @@ export const Query = {
 
   // #6: Consultas por Médico (o Profesional de la Salud)
 
-  totalConsultasRealizadasPorMedico: async (_, { id_cdi, periodo, mes }) => {
+  totalConsultasRealizadasPorMedico: async (_, { id_cdi, periodo, mes, anio }) => {
     try {
       const period = periodo || 'month';
+      const ahora = new Date();
+      const anioSeleccionado = (anio && Number.isInteger(anio)) ? anio : ahora.getFullYear();
 
       const doctores = await Doctor.findAll({
         where: { fk_cdi_id: id_cdi },
@@ -459,16 +497,37 @@ export const Query = {
 
       const consultasPorDoctor = [];
 
-      if (period === 'month') {
-        // Si se recibe 'mes' (1-12), usar ese mes del año actual. Si no, usar el mes actual.
-        const ahora = new Date();
-        const anio = ahora.getFullYear();
+      if (period === 'year') {
+        // Rango completo del año seleccionado
+        const yearStart = new Date(anioSeleccionado, 0, 1);
+        yearStart.setHours(0, 0, 0, 0);
+        const yearEnd = new Date(anioSeleccionado + 1, 0, 1);
+        yearEnd.setHours(0, 0, 0, 0);
+
+        for (const doctor of doctores) {
+          const count = await Consulta.count({
+            where: {
+              fk_doctor_id: parseInt(doctor.id_doctor),
+              createdAt: {
+                [Op.gte]: yearStart,
+                [Op.lt]: yearEnd
+              }
+            }
+          });
+          consultasPorDoctor.push(count);
+        }
+
+        return {
+          nombresDoctores,
+          consultasMedico: consultasPorDoctor,
+        };
+      } else if (period === 'month') {
         const monthIndex = (mes && Number.isInteger(mes) && mes >= 1 && mes <= 12) ? (mes - 1) : ahora.getMonth();
 
-        const monthStart = new Date(anio, monthIndex, 1);
+        const monthStart = new Date(anioSeleccionado, monthIndex, 1);
         monthStart.setHours(0, 0, 0, 0);
 
-        const monthEnd = new Date(anio, monthIndex + 1, 1);
+        const monthEnd = new Date(anioSeleccionado, monthIndex + 1, 1);
         monthEnd.setHours(0, 0, 0, 0);
 
         for (const doctor of doctores) {
@@ -514,7 +573,7 @@ export const Query = {
           consultasMedico: consultasPorDoctor,
         };
       } else {
-        throw new UserInputError('Periodo no válido. Use "month" o "week".');
+        throw new UserInputError('Periodo no válido. Use "month", "week" o "year".');
       }
     } catch (error) {
       throw new UserInputError(error.message);
@@ -591,23 +650,27 @@ export const Query = {
 
   // #8 Diagnosticos mas frecuentes: Top 10 diagnosticos mas frecuentes por CDI
 
-  top10DiagnosticosMasComunes: async (_, { id_cdi, periodo, mes }) => {
+  top10DiagnosticosMasComunes: async (_, { id_cdi, periodo, mes, anio }) => {
     try {
       const period = periodo || 'month';
+      const ahora = new Date();
+      const anioSeleccionado = (anio && Number.isInteger(anio)) ? anio : ahora.getFullYear();
 
       let startDate;
       let endDate = new Date();
 
-      if (period === 'month') {
-        // Si se recibe 'mes' (1-12), usar ese mes del año actual. Si no, usar el mes actual.
-        const ahora = new Date();
-        const anio = ahora.getFullYear();
+      if (period === 'year') {
+        startDate = new Date(anioSeleccionado, 0, 1);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(anioSeleccionado + 1, 0, 1);
+        endDate.setHours(0, 0, 0, 0);
+      } else if (period === 'month') {
         const monthIndex = (mes && Number.isInteger(mes) && mes >= 1 && mes <= 12) ? (mes - 1) : ahora.getMonth();
 
-        startDate = new Date(anio, monthIndex, 1);
+        startDate = new Date(anioSeleccionado, monthIndex, 1);
         startDate.setHours(0, 0, 0, 0);
 
-        endDate = new Date(anio, monthIndex + 1, 1);
+        endDate = new Date(anioSeleccionado, monthIndex + 1, 1);
         endDate.setHours(0, 0, 0, 0);
       } else if (period === 'week') {
         startDate = new Date();
@@ -617,7 +680,7 @@ export const Query = {
         endDate = new Date(startDate);
         endDate.setDate(endDate.getDate() + 7);
       } else {
-        throw new UserInputError('Periodo no válido. Use "month" o "week".');
+        throw new UserInputError('Periodo no válido. Use "month", "week" o "year".');
       }
 
       const top10DiagnosticosMasComunes = await Diagnostico.findAll({

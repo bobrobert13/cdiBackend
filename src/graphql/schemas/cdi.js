@@ -66,13 +66,13 @@ const queries = `
   doctoresCDI(id_cdi: ID!): [Doctor!]!
   pacientesCDI(id_cdi: ID!): [Paciente!]!
   cantidadPacienteTotales(id_cdi: ID!): Int!
-  cantidadPacientesNuevos(id_cdi: ID!, periodo: String, mes: Int): [Int]
+  cantidadPacientesNuevos(id_cdi: ID!, periodo: String, mes: Int, anio: Int): [Int]
   cantidadPacientesPorAreaDeTrabajo(id_cdi: ID!): CantidadPacientesPorAreaDeTrabajo!
   distribucionPorGenero(id_cdi: ID!): DistribucionPorGenero!
   distribucionPorEdad(id_cdi: ID!): [Int]
-  totalConsultasRealizadasPeriodo(id_cdi: ID!, periodo: String, mes: Int): [Int]
-  totalConsultasRealizadasPorMedico(id_cdi: ID!, periodo: String, mes: Int): ConsultasPorMedico!
-  top10DiagnosticosMasComunes(id_cdi: ID!, periodo: String, mes: Int): Top10DiagnosticosMasComunes!
+  totalConsultasRealizadasPeriodo(id_cdi: ID!, periodo: String, mes: Int, anio: Int): [Int]
+  totalConsultasRealizadasPorMedico(id_cdi: ID!, periodo: String, mes: Int, anio: Int): ConsultasPorMedico!
+  top10DiagnosticosMasComunes(id_cdi: ID!, periodo: String, mes: Int, anio: Int): Top10DiagnosticosMasComunes!
 `;
 
 const mutations = `
