@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'cdi-backend',
-      script: 'dist/server.js',
+      script: 'src/server.js',
       instances: 1,
       exec_mode: 'cluster',
       autorestart: true,
