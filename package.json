@@ -8,7 +8,19 @@
     "debug": "NODE_ENV=development  nodemon ./src/server.js --exec babel-node",
     "migrate": "node scripts/migrate.js",
     "db": "NODE_ENV=development nodemon ./scripts/createdb.js --exec babel-node",
-    "createAdmin": "node ./scripts/createAdmin.js --exec babel-node"
+    "createAdmin": "node ./scripts/createAdmin.js --exec babel-node",
+    "build": "babel src --out-dir dist --copy-files",
+    "start": "NODE_ENV=production node -r babel-polyfill dist/server.js",
+    "postinstall": "npm rebuild bcrypt",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop ecosystem.config.js",
+    "pm2:restart": "pm2 restart ecosystem.config.js",
+    "pm2:delete": "pm2 delete ecosystem.config.js",
+    "pm2:logs": "pm2 logs",
+    "pm2:status": "pm2 status",
+    "pm2:prod": "NODE_ENV=production pm2 start ecosystem.config.js --env production",
+    "pm2:dev": "NODE_ENV=development pm2 start ecosystem.config.js --env development",
+    "deploy": "npm run build && npm run pm2:prod"
   },
   "dependencies": {
     "apollo-server-env": "2.4.4",
@@ -18,7 +30,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-3": "^6.24.1",
-    "bcrypt": "^3.0.1",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.4",
     "crypto": "^1.0.1",
     "dotenv": "^6.2.0",
@@ -35,8 +47,7 @@
     "sequelize": "^6.35.2",
     "sequelize-cli": "^6.6.2",
     "subscriptions-transport-ws": "^0.9.15",
-    "uuid": "^11.1.0",
-    "win-node-env": "^0.6.1"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
