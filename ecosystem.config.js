@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'cdi-backend',
-      script: 'src/server.js',
+      script: 'dist/server.js',
       instances: 1,
       exec_mode: 'cluster',
       autorestart: true,
@@ -13,6 +13,7 @@ module.exports = {
       out_file: 'logs/output.log',
       merge_logs: true,
       time: true,
+
       env: {
         NODE_ENV: 'development',
         PORT: 4000,
