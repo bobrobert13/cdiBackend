@@ -1,0 +1,82 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.mutations = exports.queries = exports.types = exports.paciente = undefined;
+
+var _persona = require('./persona');
+
+const paciente = exports.paciente = `
+  id_paciente: ID!
+  enfermedades_cronicas: String
+  documento_identidad_representante: Float
+  numero_orden_representante: Float
+  peso: Float
+  vacunas: String
+  discapacidad: String
+  antecedentes_familiares: String
+  tipo_de_sangre: String
+  alergias: String
+  persona: Persona!
+  consultas: [Consulta]
+  examenes: [ExamenesResultados]
+  medicamentos: [Medicamento]
+  tratamientos: [Tratamiento]
+  diagnosticos: [Diagnostico]
+  hospitalizaciones: [Hospitalizacion]
+  doctor: Doctor
+  emergencias: [Emergencia]
+  cdi: CDI
+  createdAt: Date
+  updatedAt: Date
+`;
+
+const types = `
+  type Paciente {
+    ${paciente}
+  }
+
+  input CrearPacienteInput {
+    enfermedades_cronicas: String
+    peso: Float
+    documento_identidad_representante: Float
+    numero_orden_representante: Float
+    vacunas: String
+    discapacidad: String
+    antecedentes_familiares: String
+    tipo_de_sangre: String
+    alergias: String
+    fk_doctor_id: ID!
+    fk_cdi_id: ID!
+    personaInput: CrearPersonaInput!
+  }
+
+  input ActualizarPacienteInput {
+    enfermedades_cronicas: String
+    peso: Float
+    vacunas: String
+    discapacidad: String
+    antecedentes_familiares: String
+    tipo_de_sangre: String
+    alergias: String
+    personaInput: ActualizarPersonaInput
+  }
+`;
+
+const queries = `
+  pacientes: [Paciente!]!
+  paciente(id_paciente: ID!): Paciente
+  personaPorCedula(cedula_identidad: Float!): Persona
+`;
+
+const mutations = `
+  crearPaciente(input: CrearPacienteInput!): Paciente!
+  actualizarPaciente(id_paciente: ID!, input: ActualizarPacienteInput!): Paciente!
+  eliminarPaciente(id_paciente: ID!): Boolean!
+  Paciente: Paciente
+`;
+
+exports.types = types;
+exports.queries = queries;
+exports.mutations = mutations;
