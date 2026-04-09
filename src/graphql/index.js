@@ -9,6 +9,7 @@ import config from '../config'
 
 import typeDefs from './schemas'
 import resolvers from './resolvers'
+import { EnumValueDirective } from './directives'
 
 const env = process.env.NODE_ENV
 
@@ -27,6 +28,9 @@ export default async function (app) {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    schemaDirectives: {
+      enumValue: EnumValueDirective,
+    },
     engine: {
       apiKey: process.env.APOLLO_KEY,
       graphRef: process.env.APOLLO_GRAPH_REF,

@@ -1,21 +1,21 @@
 const types = `
 
 enum TipoDeExamen {
-  Sangre
-  Orina
-  Radiografia
-  Tomografia
-  ResonanciaMagnetica
-  Ecografia
-  Electrocardiograma
-  Endoscopia
-  Biopsia
-  Cultivo
-  AnalisisGenetico
-  PruebaDeEsfuerzo
-  Mamografia
-  Densitometria
-  Otros
+  SANGRE
+  ORINA
+  RADIOGRAFIA
+  TOMOGRAFIA
+  RESONANCIA_MAGNETICA
+  ECOGRAFIA
+  ELECTROCARDIOGRAMA
+  ENDOSCOPIA
+  BIOPSIA
+  CULTIVO
+  ANALISIS_GENETICO
+  PRUEBA_DE_ESFUERZO
+  MAMOGRAFIA
+  DENSITOMETRIA
+  OTROS
 }
 
 enum EstadoExamen {
@@ -29,7 +29,7 @@ type ExamenesResultados {
   id_examenes: ID!
   fk_doctor_id: ID!
   fk_paciente_id: ID!
-  tipo_de_examen: TipoDeExamen!
+  tipo_de_examen: String!
   descripcion: String
   resultados: String
   estado_examen: EstadoExamen!
@@ -45,7 +45,7 @@ type ExamenesResultados {
 input ExamenesResultadosInput {
   fk_doctor_id: ID!
   fk_paciente_id: ID!
-  tipo_de_examen: TipoDeExamen
+  tipo_de_examen: String
   descripcion: String
   resultados: String
   estado_examen: EstadoExamen

@@ -1,8 +1,13 @@
 import fs from'fs';
 import path from 'path';
+import { JSON } from '../scalars';
 
 export default (() => {
-  let resolvers = {Query: {}, Mutation: {}};
+  let resolvers = {
+    JSON,
+    Query: {},
+    Mutation: {}
+  };
   // let resolvers = {Query: {}, Mutation: {}, Subscription: {}};
   fs
     .readdirSync(__dirname)

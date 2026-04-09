@@ -3,7 +3,7 @@ import path from 'path'
 import { gql } from 'apollo-server-express'
 
 export default (function (){
-  var types = ''
+  var types = 'scalar JSON\n'
   let queries = ``
   let mutations = ``
   let subscriptions = ``
