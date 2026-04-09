@@ -24,7 +24,7 @@ const Direccion = sequelize.define('Direccion', {
   },
 
   calle: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING(255),
     allowNull: false
   },
 
@@ -34,7 +34,7 @@ const Direccion = sequelize.define('Direccion', {
   },
 
   sector: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING(255),
     allowNull: true
   }
 }, {
