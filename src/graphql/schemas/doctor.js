@@ -6,6 +6,7 @@ const types = `
     anos_experiencia: Int!
     numero_carnet: String!
     area_de_trabajo: String!
+    especialidad: String!
     horario: String
     fk_persona_id: ID
     fk_cdi_id: ID
@@ -18,6 +19,7 @@ const types = `
   anos_experiencia: Int!
   numero_carnet: String!
   area_de_trabajo: String!
+  especialidad: String!
   horario: String
   fk_cdi_id: ID!
   }

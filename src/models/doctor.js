@@ -24,6 +24,10 @@ const Doctor = sequelize.define('Doctor', {
     allowNull: false
   },
 
+  especialidad: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
   horario: {
     type: DataTypes.STRING(200),
     allowNull: true

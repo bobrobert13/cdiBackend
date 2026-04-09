@@ -268,6 +268,7 @@ export const Mutation = {
    anos_experiencia: input.doctorInput.anos_experiencia || doctor.anos_experiencia,
    numero_carnet: input.doctorInput.numero_carnet || doctor.numero_carnet,
    area_de_trabajo: input.doctorInput.area_de_trabajo || doctor.area_de_trabajo,
+   especialidad: input.doctorInput.especialidad || doctor.especialidad,
    horario: input.doctorInput.horario || doctor.horario,
   });
 
