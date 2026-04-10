@@ -39,7 +39,7 @@ const Persona = sequelize.define('Persona', {
   },
 
   cedula_identidad: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(20),
     allowNull: true,
   },
   fk_cdi_id: {

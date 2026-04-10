@@ -14,12 +14,17 @@ const Paciente = sequelize.define('Paciente', {
   },
 
   documento_identidad_representante: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(20),
+    allowNull: true
+  },
+
+  telefono_representante: {
+    type: DataTypes.STRING(20),
     allowNull: true
   },
 
   numero_orden_representante: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(20),
     allowNull: true
   },
 

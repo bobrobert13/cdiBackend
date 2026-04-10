@@ -10,7 +10,7 @@ export const persona = `
     edad: Int
     estado_civil: String
     ocupacion: String
-    cedula_identidad: Float
+    cedula_identidad: String
     telefono: Telefono
     correo: Correo
     direccion: Direccion
@@ -95,7 +95,7 @@ input ActualizarDireccionInput {
     nacionalidad: String
     estado_civil: String
     ocupacion: String
-    cedula_identidad: Float
+    cedula_identidad: String
   fk_cdi_id: ID
   fk_direccion_id: Int
   fk_telefono_id: Int
@@ -115,7 +115,7 @@ input ActualizarDireccionInput {
     estado_civil: String
     nacionalidad: String
     ocupacion: String
-    cedula_identidad: Float
+    cedula_identidad: String
       telefonoInput: CrearTelefonoInput
   correoInput: CrearCorreoInput
   direccionInput: CrearDireccionInput
