@@ -7,6 +7,8 @@ const types = `
     encargado: String
     cuadrante: String
     estado: String
+    createdAt: Date
+    updatedAt: Date
     usuarios: Usuario
     doctores: [Doctor]
     pacientes: [Paciente]
