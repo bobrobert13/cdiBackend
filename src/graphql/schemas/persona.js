@@ -50,8 +50,8 @@ type Telefono {
   }
 
   input CrearTelefonoInput {
-  codigo: Int!
-  numero: String!
+  codigo: Int
+  numero: String
 }
 
 input CrearCorreoInput {

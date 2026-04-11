@@ -447,9 +447,9 @@ export const Mutation = {
         ...nuevoPaciente.get(),
         persona: {
           ...nuevoPaciente.persona.get(),
-          telefono: nuevoPaciente.persona.get().telefono.get(),
-          correo: nuevoPaciente.persona.get().correo.get(),
-          direccion: nuevoPaciente.persona.get().direccion.get(),
+          telefono: nuevoPaciente.persona.get().telefono ? nuevoPaciente.persona.get().telefono.get() : null,
+          correo: nuevoPaciente.persona.get().correo,
+          direccion: nuevoPaciente.persona.get().direccion,
         }
       };
     } catch (error) {
